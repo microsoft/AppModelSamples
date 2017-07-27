@@ -1,0 +1,5 @@
+﻿Level=4
+Damage=300
+Fuel=75
+Ammunition=92%
+Weapons=Catapult,WaterBalloon

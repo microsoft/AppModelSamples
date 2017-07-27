@@ -8,12 +8,12 @@
 // PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.  
 //  
 //*********************************************************  
-  
+
 <Application
-    x:Class="TestRestart.App"
+    x:Class="TestCmdLine.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:TestRestart"
+    xmlns:local="using:TestCmdLine"
     RequestedTheme="Light">
 
 </Application>

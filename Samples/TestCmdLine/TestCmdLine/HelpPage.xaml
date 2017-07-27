@@ -1,0 +1,77 @@
+﻿//*********************************************************  
+//  
+// Copyright (c) Microsoft. All rights reserved.  
+// This code is licensed under the MIT License (MIT).  
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF  
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY  
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR  
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.  
+//  
+//*********************************************************  
+
+<Page
+    x:Class="TestCmdLine.HelpPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Help" HorizontalAlignment="Left" FontSize="32" Margin="0,0,0,18"/>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock 
+                    Grid.ColumnSpan="3" x:Name="argumentsText" HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" TextWrapping="Wrap"/>
+
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="Usage" FontSize="20" Margin="0,18,0,0"/>
+
+                <Rectangle Grid.Row="2" Grid.ColumnSpan="3" Fill="LightGray" Margin="-2" Height="20"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Switch"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Example"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="Description"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="/SelectItem"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="/SelectItem:Fish"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="Navigates to the Items page, and selects an item from the list"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="/LoadConfig"/>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="/LoadConfig:Config1.txt"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Text="Navigates to the Config page, and loads the specified config file."/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="/LoadFile"/>
+                <TextBlock Grid.Row="5" Grid.Column="1" Text="/LoadFile:SomeFile.txt"/>
+                <TextBlock Grid.Row="5" Grid.Column="2" Text="Navigates to the File page, and loads the specified text file, using the activation current directory."/>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

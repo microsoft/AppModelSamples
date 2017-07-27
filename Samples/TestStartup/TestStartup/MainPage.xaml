@@ -1,0 +1,44 @@
+﻿//*********************************************************  
+//  
+// Copyright (c) Microsoft. All rights reserved.  
+// This code is licensed under the MIT License (MIT).  
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF  
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY  
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR  
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.  
+//  
+//*********************************************************  
+
+<Page
+    x:Class="TestStartup.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Startup App - Settings" HorizontalAlignment="Left" FontSize="32" Margin="0,0,0,24"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock Text="Activation Kind:" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="activationText" Width="120" FontWeight="Bold" HorizontalAlignment="Left" Margin="8,0,0,0" Text="User Launch"/>
+            </StackPanel>
+
+            <Button Grid.Row="2" x:Name="requestButton" Content="Request to Enable Startup" Click="requestButton_Click" Margin="0,16,0,16"/>
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                <TextBlock x:Name="requestPrompt" Text="Startup State:" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="requestResult" Width="120" FontWeight="Bold" HorizontalAlignment="Left" Margin="8,0,0,0" Text="Disabled"/>
+            </StackPanel>
+            
+        </Grid>
+    </Grid>
+</Page>

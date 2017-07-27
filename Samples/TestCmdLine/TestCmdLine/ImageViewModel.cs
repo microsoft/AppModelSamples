@@ -8,11 +8,11 @@
 // PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.  
 //  
 //*********************************************************  
- 
+
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace TestRestart
+namespace TestCmdLine
 {
     public class ImageViewModel
     {
@@ -29,23 +29,23 @@ namespace TestRestart
             Items = new ObservableCollection<ImageViewModel>();
             Items.Add(new ImageViewModel()
             {
-                Image = "/Assets/london.png",
-                Name = "London"
+                Image = "/Assets/Cat.png",
+                Name = "Cat"
             });
             Items.Add(new ImageViewModel()
             {
-                Image = "/Assets/paris.png",
-                Name = "Paris"
+                Image = "/Assets/Dog.png",
+                Name = "Dog"
             });
             Items.Add(new ImageViewModel()
             {
-                Image = "/Assets/seattle.png",
-                Name = "Seattle"
+                Image = "/Assets/Fish.png",
+                Name = "Fish"
             });
             Items.Add(new ImageViewModel()
             {
-                Image = "/Assets/vancouver.png",
-                Name = "Vancouver"
+                Image = "/Assets/Octopus.png",
+                Name = "Octopus"
             });
         }
 

@@ -1,0 +1,5 @@
+﻿Level=12
+Damage=456
+Fuel=210
+Ammunition=40%
+Weapons=WetSponge
