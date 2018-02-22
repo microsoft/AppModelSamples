@@ -1,0 +1,4 @@
+# BananaEdit
+This sample demonstrates the use of the multi-instance redirection APIs, as represented by the AppInstance class. The app declares a file association extension, which allows the user to activate the app by double-tapping a ".banana" file. Each time the user opens a .banana file, a separate instance of the app is created. 
+
+If the user attempts to open a file in more than one instance of the app, the app is notified and can redirect the new activation request to an existing running instance instead. In this way, it can protect against the user editing the same file in multiple instances. 

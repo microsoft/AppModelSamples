@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="BananaEdit.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    SizeChanged="Page_SizeChanged">
+
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,2"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#ffd800">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Margin="0,-12,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="BananaEdit" FontSize="60" Foreground="Gray"/>
+                    <TextBlock x:Name="versionText" FontSize="6" VerticalAlignment="Center" Margin="6,-14,0,0" Text="0.0.0.0" Foreground="Gray"/>
+                </StackPanel>
+                <Image Grid.Column="1" Width="80" Height="80" HorizontalAlignment="Right" Source="/Assets/bananas.jpg"/>
+                <TextBlock Grid.Column="1" x:Name="instanceNumber" FontSize="60" Text="1" Foreground="Gray" HorizontalAlignment="Center"/>
+            </Grid>
+
+            <!--<TextBlock 
+                Grid.Row="1" Margin="0,28,0,0" FontSize="16" TextWrapping="Wrap"
+                Text="Create some text files and name them with a '.banana' extension. Then launch multiple instances of this app either from Start or by double-clicking banana files. If you try to open the same file twice, you'll be redirected to the instance that already has the file open."/>-->
+
+            <TextBlock Grid.Row="2" x:Name="fileName" Margin="0,28,0,0" FontSize="24" Foreground="Gray"/>
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled" x:Name="fileScrollViewer" Background="Gray">
+                <TextBlock x:Name="fileText" TextWrapping="Wrap" FontSize="18" Foreground="#ffd800" Padding="4"/>
+            </ScrollViewer>
+
+            <Grid Grid.Row="4" x:Name="buttonGrid" Margin="0,6,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="closeFile" Content="Close File" Click="CloseFile_Click"/>
+                <Button Grid.Column="1" x:Name="openFile" Content="Open File" Click="OpenFile_Click" Margin="4,0,0,0"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
