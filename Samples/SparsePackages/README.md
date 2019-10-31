@@ -2,7 +2,7 @@ This repo contains a sample C# application demonstrating how to use [Signed Spar
 
 ## Instructions
 
-You can learn more about Signed Sparse Packages and Identity, Registration & Activation of  Win32 apps [here](https://aka.ms/sparsepkgblog).
+You can learn more about Signed Sparse Packages and Identity, Registration & Activation of  Win32 apps in this [blogpost](https://aka.ms/sparsepkgblog) and in the [documentation](https://aka.ms/sparsepkgdocs).
 
 ### Requirements
 
