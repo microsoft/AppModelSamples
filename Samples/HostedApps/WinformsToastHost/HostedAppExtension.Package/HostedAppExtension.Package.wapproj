@@ -27,10 +27,10 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>e122b9a1-3317-458a-8535-9ccb8c151ce6</ProjectGuid>
-    <TargetPlatformVersion>10.0.19569.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.19569.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <EntryPointExe>MyExtension.dll</EntryPointExe>
+    <!--<EntryPointExe>MyExtension.dll</EntryPointExe>-->
     <EntryPointProjectUniqueName>..\HostedAppExtension\HostedAppExtension.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>

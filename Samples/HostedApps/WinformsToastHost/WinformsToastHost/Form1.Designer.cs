@@ -39,22 +39,22 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(14, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(131, 20);
+            this.label1.Size = new System.Drawing.Size(195, 29);
             this.label1.TabIndex = 0;
             this.label1.Text = "Package Identity:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label2.Location = new System.Drawing.Point(14, 57);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(112, 20);
+            this.label2.Size = new System.Drawing.Size(167, 29);
             this.label2.TabIndex = 1;
             this.label2.Text = "Package Path:";
             // 
@@ -71,22 +71,22 @@
             // 
             // txtPackageId
             // 
-            this.txtPackageId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtPackageId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPackageId.Location = new System.Drawing.Point(171, 6);
+            this.txtPackageId.Location = new System.Drawing.Point(205, 6);
             this.txtPackageId.Name = "txtPackageId";
             this.txtPackageId.ReadOnly = true;
-            this.txtPackageId.Size = new System.Drawing.Size(475, 26);
+            this.txtPackageId.Size = new System.Drawing.Size(614, 35);
             this.txtPackageId.TabIndex = 3;
             // 
             // txtPackagePath
             // 
-            this.txtPackagePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.txtPackagePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPackagePath.Location = new System.Drawing.Point(171, 54);
+            this.txtPackagePath.Location = new System.Drawing.Point(205, 54);
             this.txtPackagePath.Name = "txtPackagePath";
             this.txtPackagePath.ReadOnly = true;
-            this.txtPackagePath.Size = new System.Drawing.Size(475, 26);
+            this.txtPackagePath.Size = new System.Drawing.Size(614, 35);
             this.txtPackagePath.TabIndex = 4;
             // 
             // btnRunHostedApp
@@ -102,16 +102,16 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(658, 154);
+            this.ClientSize = new System.Drawing.Size(828, 154);
+            this.Controls.Add(this.txtPackageId);
             this.Controls.Add(this.btnRunHostedApp);
             this.Controls.Add(this.txtPackagePath);
-            this.Controls.Add(this.txtPackageId);
             this.Controls.Add(this.btnShowToast);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "Form1";
             this.Text = "WinForms Toast Host";

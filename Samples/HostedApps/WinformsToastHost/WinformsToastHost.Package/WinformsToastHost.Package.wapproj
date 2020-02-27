@@ -27,8 +27,8 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>6a064380-2b6f-410a-89f3-64f484fa461a</ProjectGuid>
-    <TargetPlatformVersion>10.0.19569.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.19569.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EntryPointProjectUniqueName>..\WinformsToastHost\WinformsToastHost.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
