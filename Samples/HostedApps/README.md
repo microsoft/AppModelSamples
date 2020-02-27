@@ -4,29 +4,71 @@ This repo contains 2 sample applications demonstrating how to use the Hosted App
 You can learn more about the Hosted AppModel in this documentation.
 
 ### Requirements:
-1. Windows SDK version 10.0.19041.0 or higher
-2. Windows OS version 10.0.19041.0 or higher
+1. Windows SDK version 10.0.19563.0 or higher
+2. Windows OS version 10.0.19563.0 or higher
 
-## WinformsToastHost with binary extension
-The host in this example is a simple Windows Forms application that displays its package identity, location, and calls the ToastNotification apis. 
-It also has the capability to load a binary extension from a hosted app package through reflection. 
-When run under its own identity, it does not display the extension information. 
-The application is packaged with the Windows Application Packaging Project which includes the manifest declarations for being a host.
+## WinformsToastHost.Package
+This package contains a simple Windows Forms application that displays the package's identity & 
+location and can show a simple toast notification to launch a new instance of the app. 
 
-### WinformsToastHost-Extension
-The hosted app is a .NET dll that implements an extension mechanism for the host to load. 
-It also includes a packaging project that declares its identity and dependency upon the hostruntime. 
-You will see this identity reflected in the values displayed when the application is run. 
-When registered, the host has access to the hostedapp’s package location and thus can load the extension. 
+It also has the capability to be a host for other apps, in which case it loads a well-known DLL
+from the hosted app's install directory and calls into the DLL to perform the app-specific 
+behavior.
+
+The app is packaged with the Windows Application Packaging Project which includes the 
+manifest declarations for being a host:
+
+```
+<Extensions>
+  <uap10:Extension Category="windows.hostRuntime" Executable="WinformsToastHost\WinformsToastHost.exe"
+        uap10:RuntimeBehavior="packagedClassicApp"
+        uap10:TrustLevel="mediumIL">
+    <uap10:HostRuntime Id="WinformsToastHost"/>
+  </uap10:Extension>
+</Extensions>
+```
+
+### HostedAppExtension.Package
+This package includes a simple DLL that implements the app-specific logic for an app
+that relies on the `WinformsToastHost` app to do the heavy lifting. The extension mechanism
+is trivial and all the extension does is show a `MessageBox`.
+
+The app is packaged with the Windows Application Packaging Project which includes the 
+manifest declarations for relying on a host app package and the entry-point within the
+host's package (in this case, `WinformsHostToast`):
+
+```
+<Dependencies>
+  <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19569.0" MaxVersionTested="10.0.19569.0" />
+  <uap10:HostRuntimeDependency Name="WinformsToastHost" Publisher="CN=AppModelSamples" MinVersion="1.0.0.0" />
+</Dependencies>
+
+<!-- ... -->
+
+  <Application Id="App" uap10:HostId="WinformsToastHost">
+    <!-- ... -->
+  </Application>
+```
 
 ### Building and running the sample
 1. Make sure your machine has Developer Mode turned on.
-2. Retarget the solution to the 10.0.19041 or higher SDK version on your machine – Right click -> Retarget solution.
-3. Open WinformsToastHost.sln in VS2019
-4. Build and deploy WinformsToastHost.Package
-5. Build and deploy HostedExtension
-6. Goto Start menu and launch WinformsToastHost
-7. Goto Start menu and launch WinformsToastHost-HostedExtension
+1. Retarget the solution to the 10.0.19563 or higher SDK version on your machine – Right click -> Retarget solution.
+1. Open WinformsToastHost.sln in VS2019.
+1. Build and deploy `WinformsToastHost.Package`.
+1. Build and deploy `HostedAppExtension.Package`.
+1. Goto Start menu and launch `WinformsToastHost`.
+   * Note that there is only one button in the app.
+   * Clicking the "Show Toast" button will show a toast -- if you click on the toast, a new
+instance of the app will start with the same identity.
+1. Goto Start menu and launch `Hosted WinformsToastHost Extension`.
+   * Note that there are now two buttons on the app, and its identity is different than before.
+   * Clicking the "Show Toast" button will show a toast -- if you click on the toast, a new
+instance of the app will start with the same hosted app's identity.
+   * Clicking the "Run hosted app" button will load and run the extension provided by
+the hosted app.
+
+In a real app, the host would automatically load and execute the hosted app's code; this sample requires
+you to press the button to do so.
 
 ## Python host & Number Guesser game
 In this example, the host is comprised of 2 projects – first is PyScriptEngine which is wrapper written in C# and makes use of the Python nuget package to run python scripts. 
