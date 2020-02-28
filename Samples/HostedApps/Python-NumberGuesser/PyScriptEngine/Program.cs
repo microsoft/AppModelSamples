@@ -1,115 +1,145 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Management.Deployment;
 
-namespace PyScriptEngine {
-    class Program {
+namespace PyScriptEngine
+{
+    class Program
+    {
+        private static class NativeMethods
+        {
+            // Declaration to invoke Python3
+            [DllImport("python3", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+            internal static extern int Py_Main(int argc, string[] argv);
+        }
 
-        //Declaration to invoke Python3
-        [DllImport("python3", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-        static extern int Py_Main(int argc, string[] argv);
-
-        static async Task Main(string[] args) {
+        static async Task<int> Main(string[] args)
+        {
             bool result = false;
 
-            //Parse command line
-            if (args.Length == 2) {
-                switch (args[0].ToLower())
-                {
-                    //Register an appxmanifest.xml file
-                    case "-register":
-                        if (!File.Exists(args[1])) {
-                            Console.WriteLine("Please pass a path to an AppxManifest.xml with the -Register flag");
-                        } else {
-                            result = await RegisterHostedPackageAsync(args[1]);
-                        }
-                        break;
-
-                    //Register msix package
-                    case "-addpackage":
-                        if (!File.Exists(args[1])) {
-                            Console.WriteLine("Please pass a path to an MSIX or APPX package with the -AddPackage flag");
-                        } else {
-                            result = await InstallHostedPackageAsync(args[1]);
-                        }
-                        break;
-
-                    //We are launched as a hostedapp, process the script!
-                    case "-script":
-                        Console.WriteLine("Launching script" + args[1]);
-                        result = await LaunchHostedPackageAsync(args[1]);
-                        break;
-
-                    //switch error
-                    default:
-                        Console.WriteLine("Unrecognized switch: " + args[0]);
-                        break;
-                }
-            } else {
+            if (args.Length != 2)
+            {
                 Usage();
+                return 1;
             }
 
-            Environment.Exit(result ? 0 : -1);
+            string command = args[0].ToLowerInvariant();
+            string param = args[1];
 
+            // Parse the command line
+            switch (command)
+            {
+                // Register an AppxManifest.xml file
+                case "-register":
+                    if (!File.Exists(param) || Path.GetFileName(param).ToLowerInvariant() != "appxmanifest.xml")
+                    {
+                        Console.Error.WriteLine($"File '{param}' does not exist or is not an AppXManifest.xml file.");
+                    }
+                    else
+                    {
+                        result = await RegisterHostedPackageAsync(param);
+                    }
+                    break;
+
+                // Register an MSIX package
+                case "-addpackage":
+                    var extension = Path.GetExtension(param).ToLowerInvariant();
+                    if (!File.Exists(param) || (extension != "msix" && extension != "appx"))
+                    {
+                        Console.Error.WriteLine($"File '{param}' does not exist or is not a valid MSIX file.");
+                    }
+                    else
+                    {
+                        result = await InstallHostedPackageAsync(param);
+                    }
+                    break;
+
+                // Run the provided script
+                case "-script":
+                    result = LaunchHostedPackage(param);
+                    break;
+
+                // Unknown error
+                default:
+                    Console.Error.WriteLine($"Unrecognized switch: {command}.");
+                    break;
+            }
+
+            return result ? 0 : 2;
         }
 
-        static async Task<bool> LaunchHostedPackageAsync(string script) {
+        static bool LaunchHostedPackage(string filename)
+        {
+            // The host 'pyscriptengine' will be running under the identity of the hosted app
+            var scriptFullName = Path.Combine(Package.Current.InstalledPath, filename);
+            var displayName = Package.Current.DisplayName;
 
-            //The host 'pyscriptengine' will be running under the identity of the hostedapp 'battleship'
-            var scriptFile = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(script);
-            var displayName = Windows.ApplicationModel.Package.Current.DisplayName;
-            Console.WriteLine("scriptfile: " + scriptFile.Path);
-            await System.Threading.Tasks.Task.Delay(2000); //wait for 2 seconds (= 2000ms)
-            return Py_Main(2, new[] { displayName, scriptFile.Path }) == 0;
+            Console.WriteLine($"Launching script: {scriptFullName}...");
+            Console.WriteLine();
+
+            return NativeMethods.Py_Main(2, new[] { displayName, scriptFullName }) == 0;
         }
 
-        static void Usage() {
-            var exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
-            Console.WriteLine(@$"No parameters given. To register a Hosted Package please use: 
-{exeName} -AddPackage <Path to myPackage.msix>
- OR
-{exeName} -Register <Path to AppxManifest.xml>
-from a command line prompt");
+        static void Usage()
+        {
+            var exeName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
+            Console.WriteLine(@$"
+Usage:
+  
+  To register an MSIX package, use:  {exeName} -AddPackage <MSIX-file>
+  To register a loose package, use:  {exeName} -Register <AppXManifest.xml>
+  
+  To run a registered package, run it's associated tile from the Start menu.
+");
         }
 
-        static Task<bool> RegisterHostedPackageAsync(string path) => AddHostedPackageAsync(path, false);
-        static Task<bool> InstallHostedPackageAsync(string path) => AddHostedPackageAsync(path, true);
+        static Task<bool> RegisterHostedPackageAsync(string filename) => AddHostedPackageAsync(filename, false);
+        static Task<bool> InstallHostedPackageAsync(string filename) => AddHostedPackageAsync(filename, true);
 
-        static async Task<bool> AddHostedPackageAsync(string pathToPackage, bool isPackageFile) {
-            var packageUri = new Uri(pathToPackage);
-
-            Console.WriteLine(" Package Address {0}", pathToPackage);
-            Console.WriteLine(" Package Uri {0}", packageUri);
-
+        static async Task<bool> AddHostedPackageAsync(string filename, bool isPackageFile)
+        {
+            var packageUri = new Uri(Path.GetFullPath(filename));
             PackageManager packageManager = new PackageManager();
-
             Task<DeploymentResult> deployment = null;
 
-            // Set AllowUnsigned=true for unsigned Hosted Apps
-            if (isPackageFile) {
-                var addOptions = new AddPackageOptions { AllowUnsigned = true };
+            Console.WriteLine($"Installing package {packageUri}...");
+
+            if (isPackageFile)
+            {
+                // Package files are always signed, by definition.
+                var addOptions = new AddPackageOptions();
                 deployment = packageManager.AddPackageByUriAsync(packageUri, addOptions).AsTask();
-            } else {
+            }
+            else
+            {
+                // AppXManifest is not signed
                 var regOptions = new RegisterPackageOptions { AllowUnsigned = true };
                 deployment = packageManager.RegisterPackageByUriAsync(packageUri, regOptions).AsTask();
             }
 
-            Console.WriteLine("Installing package {0}", packageUri);
-            Debug.WriteLine("Waiting for package registration to complete...");
-
-            try {
+            try
+            {
                 await deployment;
-                Console.WriteLine("Registration succeeded! Try running the new app.");
+                Console.WriteLine("Installation succeeded. The app should appear in the Start menu now.");
                 return true;
-            } catch (OperationCanceledException) {
-                Console.WriteLine("Registration was canceled");
-            } catch (AggregateException ex) {
-                Console.WriteLine($"Installation Error: {ex}");
             }
+            catch (OperationCanceledException)
+            {
+                Console.Error.WriteLine("Installation was canceled.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Installation Error: {ex.Message}.");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Installation failed.");
             return false;
         }
     }

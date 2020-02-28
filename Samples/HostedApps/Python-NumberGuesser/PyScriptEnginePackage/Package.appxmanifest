@@ -10,19 +10,18 @@
   IgnorableNamespaces="uap rescap desktop4 uap5 uap10">
 
   <Identity
-    Name="PyScriptEngine"
-    Publisher="CN=ContosoScripts"
-    Version="1.0.16.0" />
+    Name="PyScriptEnginePackage"
+    Publisher="CN=AppModelSamples"
+    Version="1.0.2.0" />
 
   <Properties>
-    <DisplayName>PyScriptEngine</DisplayName>
-    <PublisherDisplayName>Contoso Scripts</PublisherDisplayName>
+    <DisplayName>Python Script Host</DisplayName>
+    <PublisherDisplayName>AppModelSamples</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
-    <!--<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19000.0" MaxVersionTested="10.0.19000.0" />-->
-    <TargetDeviceFamily MaxVersionTested="10.0.19000.0" MinVersion="10.0.19000.0" Name="Windows.Desktop" />
+    <TargetDeviceFamily Name="Windows.Desktop" MaxVersionTested="10.0.19041.0" MinVersion="10.0.19041.0" />
   </Dependencies>
 
   <Resources>
@@ -35,8 +34,8 @@
       EntryPoint="$targetentrypoint"
       desktop4:SupportsMultipleInstances="true">
       <uap:VisualElements
-        DisplayName="PyScriptEngine"
-        Description="Python Script Engine"
+        DisplayName="Python Host App"
+        Description="Python Script Engine, acting as a Host App"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
@@ -54,7 +53,6 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="packageManagement" />
   </Capabilities>
