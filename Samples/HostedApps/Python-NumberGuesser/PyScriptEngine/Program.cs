@@ -1,10 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+
 using Windows.ApplicationModel;
 using Windows.Management.Deployment;
 
@@ -14,13 +13,19 @@ namespace PyScriptEngine
     {
         private static class NativeMethods
         {
-            // Declaration to invoke Python3
-            [DllImport("python3", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-            internal static extern int Py_Main(int argc, string[] argv);
+            // Export from the included Python nuget package
+            [DllImport("python3", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint ="Py_Main")]
+            internal static extern int RunPythonScript(int argc, string[] argv);
         }
+
+        static string ExeName { get; } = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
 
         static async Task<int> Main(string[] args)
         {
+            Console.WriteLine($"{ExeName}, a simple host for running Python scripts.");
+            Console.WriteLine("See https://github.com/microsoft/AppModelSamples for source.");
+            Console.WriteLine();
+
             bool result = false;
 
             if (args.Length != 2)
@@ -50,19 +55,35 @@ namespace PyScriptEngine
                 // Register an MSIX package
                 case "-addpackage":
                     var extension = Path.GetExtension(param).ToLowerInvariant();
-                    if (!File.Exists(param) || (extension != "msix" && extension != "appx"))
+                    if (!File.Exists(param) || (extension != ".msix" && extension != ".appx"))
                     {
                         Console.Error.WriteLine($"File '{param}' does not exist or is not a valid MSIX file.");
                     }
                     else
                     {
-                        result = await InstallHostedPackageAsync(param);
+                        bool allowUnsigned = false;
+
+                        if (args.Length >= 3)
+                        {
+                            var extraParam = args[2].ToLowerInvariant();
+                            if (extraParam == "-unsigned")
+                            {
+                                allowUnsigned = true;
+                            }
+                        }
+
+                        Console.WriteLine($"{(allowUnsigned ? "Allowing" : "Not allowing")} unsigned packages.");
+                        result = await InstallHostedPackageAsync(param, allowUnsigned);
                     }
                     break;
 
                 // Run the provided script
                 case "-script":
                     result = LaunchHostedPackage(param);
+                    break;
+
+                case "-legal":
+                    // TODO Adam figure it out :)
                     break;
 
                 // Unknown error
@@ -83,42 +104,58 @@ namespace PyScriptEngine
             Console.WriteLine($"Launching script: {scriptFullName}...");
             Console.WriteLine();
 
-            return NativeMethods.Py_Main(2, new[] { displayName, scriptFullName }) == 0;
+            return NativeMethods.RunPythonScript(2, new[] { displayName, scriptFullName }) == 0;
         }
 
         static void Usage()
         {
-            var exeName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
             Console.WriteLine(@$"
 Usage:
   
-  To register an MSIX package, use:  {exeName} -AddPackage <MSIX-file>
-  To register a loose package, use:  {exeName} -Register <AppXManifest.xml>
-  
-  To run a registered package, run it's associated tile from the Start menu.
+  To register a loose package:
+
+    {ExeName} -Register <AppXManifest.xml>
+
+  To register an MSIX package:
+
+    {ExeName} -AddPackage <MSIX-file> [-unsigned]
+
+    The optional -unsigned parameter is used if the package is unsigned. 
+    In this case, the package cannot include any executable files; only 
+    content files (like .py scripts or images) for the Host to execute.
+
+  To view acknowledgements and license info:
+
+    {ExeName} -Legal
+
+
+  To run a registered package, run it from the Start Menu.
 ");
         }
 
-        static Task<bool> RegisterHostedPackageAsync(string filename) => AddHostedPackageAsync(filename, false);
-        static Task<bool> InstallHostedPackageAsync(string filename) => AddHostedPackageAsync(filename, true);
+        static Task<bool> RegisterHostedPackageAsync(string filename) => AddHostedPackageAsync(filename, false, true);
+        static Task<bool> InstallHostedPackageAsync(string filename, bool allowUnsigned) => AddHostedPackageAsync(filename, true, allowUnsigned);
 
-        static async Task<bool> AddHostedPackageAsync(string filename, bool isPackageFile)
+        static async Task<bool> AddHostedPackageAsync(string filename, bool isPackageFile, bool allowUnsigned)
         {
             var packageUri = new Uri(Path.GetFullPath(filename));
             PackageManager packageManager = new PackageManager();
             Task<DeploymentResult> deployment = null;
 
-            Console.WriteLine($"Installing package {packageUri}...");
+            Console.WriteLine();
+            Console.WriteLine($"Installing {(isPackageFile ? "package" : "manifest")} {packageUri}...");
 
             if (isPackageFile)
             {
-                // Package files are always signed, by definition.
+                // Package files that contain code must be signed, but those only containing "content" (e.g.
+                // packages that rely on a host for their executables) do not need to be signed. 
                 var addOptions = new AddPackageOptions();
+                addOptions.AllowUnsigned = allowUnsigned;
                 deployment = packageManager.AddPackageByUriAsync(packageUri, addOptions).AsTask();
             }
             else
             {
-                // AppXManifest is not signed
+                // Raw AppXManifest is not signed; always allow unsigned things
                 var regOptions = new RegisterPackageOptions { AllowUnsigned = true };
                 deployment = packageManager.RegisterPackageByUriAsync(packageUri, regOptions).AsTask();
             }
@@ -126,15 +163,13 @@ Usage:
             try
             {
                 await deployment;
-                Console.WriteLine("Installation succeeded. The app should appear in the Start menu now.");
+                Console.WriteLine();
+                Console.WriteLine("Success! The app should now appear in the Start Menu.");
                 return true;
             }
-            catch (OperationCanceledException)
+            catch(Exception ex)
             {
-                Console.Error.WriteLine("Installation was canceled.");
-            }
-            catch (Exception ex)
-            {
+                Console.Error.WriteLine();
                 Console.Error.WriteLine($"Installation Error: {ex.Message}.");
             }
 

@@ -12,7 +12,7 @@
   <Identity
     Name="PyScriptEnginePackage"
     Publisher="CN=AppModelSamples"
-    Version="1.0.2.0" />
+    Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>Python Script Host</DisplayName>
