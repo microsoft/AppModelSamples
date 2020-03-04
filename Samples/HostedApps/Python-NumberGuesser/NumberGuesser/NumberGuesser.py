@@ -1,20 +1,24 @@
 import random
 
-MAX = 99
+MAX_GUESS = 100
 
-randNum = random.randint(1, MAX)
+randomNumber = random.randint(1, MAX_GUESS )
 
-playerGuess = int(input("Enter an integer from 1 to " + str(MAX) + ": "))
-numGuesses = 1
+print("Welcome to the Number Guessing Game, hosted by the Python Host App Sample.")
+print("Try to guess the secret number between 1 and", MAX_GUESS)
 
-while randNum != playerGuess:
-    print
-    if playerGuess < randNum:
-        print("You guessed low")
-        playerGuess = int(input("Enter an integer from 1 to " + str(MAX) + ": "))
-    elif playerGuess > randNum:
-        print("You guessed high")
-        playerGuess = int(input("Enter an integer from 1 to " + str(MAX) + ": "))
+playerGuess = -1
+numGuesses = 0
+
+while randomNumber != playerGuess:
+    playerGuess = int(input("Enter an integer from 1 to " + str(MAX_GUESS) + ": "))
     numGuesses += 1
-print("You guessed it in " + str(numGuesses) + " tries!")
-input("Press any key to exit")
+
+    if playerGuess < randomNumber:
+        print("You guessed too low; try again!")
+    elif playerGuess > randomNumber:
+        print("You guessed too high; try again!")
+
+print("Congratulations! You guessed the number in", numGuesses, "tries.")
+input("Press any key to exit...")
+
