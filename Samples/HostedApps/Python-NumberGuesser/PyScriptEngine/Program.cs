@@ -28,7 +28,7 @@ namespace PyScriptEngine
 
             bool result = false;
 
-            if (args.Length != 2)
+            if ((args.Length != 2) && (args.Length != 3))
             {
                 Usage();
                 return 1;
@@ -82,10 +82,6 @@ namespace PyScriptEngine
                     result = LaunchHostedPackage(param);
                     break;
 
-                case "-legal":
-                    // TODO Adam figure it out :)
-                    break;
-
                 // Unknown error
                 default:
                     Console.Error.WriteLine($"Unrecognized switch: {command}.");
@@ -123,11 +119,6 @@ Usage:
     The optional -unsigned parameter is used if the package is unsigned. 
     In this case, the package cannot include any executable files; only 
     content files (like .py scripts or images) for the Host to execute.
-
-  To view acknowledgements and license info:
-
-    {ExeName} -Legal
-
 
   To run a registered package, run it from the Start Menu.
 ");
