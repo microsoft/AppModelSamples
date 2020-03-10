@@ -4,8 +4,8 @@ This repo contains 2 sample applications demonstrating how to use the Hosted App
 You can learn more about the Hosted AppModel in this documentation.
 
 ### Requirements:
-1. Windows SDK version 10.0.19563.0 or higher
-2. Windows OS version 10.0.19563.0 or higher
+1. Windows SDK version 10.0.19041.0 or higher
+2. Windows OS version 10.0.19041.0 or higher
 
 ## WinformsToastHost.Package
 This package contains a simple Windows Forms application that displays the package's identity & 
@@ -52,8 +52,8 @@ host's package (in this case, `WinformsHostToast`):
 
 ### Building and running the sample
 1. Make sure your machine has Developer Mode turned on.
-1. Retarget the solution to the 10.0.19563 or higher SDK version on your machine – Right click -> Retarget solution.
 1. Open WinformsToastHost.sln in VS2019.
+1. Retarget the `WinformsToastHost.Package` project to the 10.0.19041 or higher SDK version installed on your machine.
 1. Build and deploy `WinformsToastHost.Package`.
 1. Build and deploy `HostedAppExtension.Package`.
 1. Goto Start menu and launch `WinformsToastHost`.
@@ -81,27 +81,56 @@ The manifest also contains the Unsigned Publisher OID entry that is required for
 
 ### Building and running the sample
 1. Make sure your machine has Developer Mode turned on.
-2. Retarget the solution to the SDK version on your machine – Right click -> Retarget solution.
-3. Open PyScriptEngine.sln solution in Visual Studio
-4. Set PyScriptEnginePackage as the Startup project
-5. Build PyScriptEnginePackage 
-6. Deploy PyScriptEnginePackage  (Right-Click PyScriptEnginePackage | Deploy) 
-7. Because the host app declares an appexecutionalias, you now go to a command prompt and run “pyscriptengine” to get the usage notice:
+2. Open PyScriptEngine.sln solution in Visual Studio
+3. Retarget the `PyScriptEnginePackage` project to the 10.0.19041 SDK or higher version installed on your machine.
+4. Build & Deploy `PyScriptEnginePackage` 
+5. Because the host app declares an appexecutionalias, you now go to a command prompt and run “pyscriptengine” to get the usage notice:
 
-> D:\repos\HostedApps>pyscriptengine <br>
-> No parameters given. To register a Hosted Package please use: <br>
-> PyScriptEngine.dll -AddPackage <Path to myPackage.msix> <br>
-> &nbsp;&nbsp;OR <br>
-> PyScriptEngine.dll -Register <Path to AppxManifest.xml> <br>
-> from a command line prompt <br>
+> C:\repos\AppModelSamples>pyscriptengine<br>
+> PyScriptEngine.exe, a simple host for running Python scripts.<br>
+> See https://github.com/microsoft/AppModelSamples for source.
+> 
+> Usage:
+> 
+>   To register a loose package:
+> 
+>     PyScriptEngine.exe -Register <AppXManifest.xml>
+> 
+>   To register an MSIX package:
+> 
+>     PyScriptEngine.exe -AddPackage <MSIX-file> [-unsigned]
+> 
+>     The optional -unsigned parameter is used if the package is unsigned.
+>     In this case, the package cannot include any executable files; only
+>     content files (like .py scripts or images) for the Host to execute.
+> 
+>   To run a registered package, run it from the Start Menu.
 
-8.	Now register the hosted application
-> D:\repos\HostedApps>pyscriptengine -Register D:\repos\HostedApps\NumberGuesser\AppxManifest.xml <br>
-> Package Address D:\repos\HostedApps\NumberGuesser\AppxManifest.xml <br>
-> Package Uri file:///D:/repos/HostedApps/NumberGuesser/AppxManifest.xml <br>
-> Installing package file:///D:/repos/HostedApps/NumberGuesser/AppxManifest.xml <br>
-> Registration succeeded! Try running the new app. <br>
+6.	There are 2 ways to register the Hosted App, NumberGuesser, (a) with the loose file AppxManifest.xml or (b) building the msix package.<br>
+    (a) To register the hosted application via the file manifest run the following from the commandline: 
 
-9.	Now, click on "NumberGuesser" in your start menu, and run the game!
+    > C:\repos\AppModelSamples\Samples\HostedApps\Python-NumberGuesser>pyscriptengine -register .\NumberGuesser\AppxManifest.xml
+    >
+    > PyScriptEngine.exe, a simple host for running Python scripts. <br>
+    > See https://github.com/microsoft/AppModelSamples for source.
+    >    
+    > Installing manifest file:///C:/repos/AppModelSamples/Samples/HostedApps/Python-NumberGuesser/NumberGuesser/AppxManifest.xml...
+    >    
+    > Success! The app should now appear in the Start Menu.
+
+    (b) To register NumberGuesser as an msix package, first build the msix by right-clicking on the `NumberGuesserPackage` project and choose Publish->Create App Packages. Choose Sideloading and turn off "Enable automatic updates". You can skip package signing, and in the final step be sure to set "Generate app bundle=Never". The output will be a NumberGuesser msix package. Now register this package from the command line:
+
+    > C:\repos\AppModelSamples\Samples\HostedApps\Python-NumberGuesser>pyscriptengine -addpackage .\NumberGuesserProject\AppPackages\NumberGuesserPackage_1.0.0.0_x64_Debug_Test\NumberGuesserPackage_1.0.0.0_x64_Debug.msix -unsigned 
+    >
+    > PyScriptEngine.exe, a simple host for running Python scripts. <br>
+    > See https://github.com/microsoft/AppModelSamples for source. <br>
+    > 
+    > Allowing unsigned packages.
+    > 
+    > Installing package file:///C:/repos/AppModelSamples/Samples/HostedApps/Python-NumberGuesser/NumberGuesserProject/AppPackages/NumberGuesserPackage_1.0.0.0_x64_Debug_Test/NumberGuesserPackage_1.0.0.0_x64_Debug.msix...
+    > 
+    > Success! The app should now appear in the Start Menu.
+
+9.	Now, click on "NumberGuesser (Manifest only)" or "NumberGuesser (MSIX)" in your start menu, and run the game!
 
 
