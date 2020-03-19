@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap desktop4 uap5 uap10">
+
+  <Identity
+    Name="PyScriptEnginePackage"
+    Publisher="CN=AppModelSamples"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>Python Script Host</DisplayName>
+    <PublisherDisplayName>AppModelSamples</PublisherDisplayName>
+    <Logo>Images\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MaxVersionTested="10.0.19041.0" MinVersion="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"       
+      EntryPoint="$targetentrypoint"
+      desktop4:SupportsMultipleInstances="true">
+      <uap:VisualElements
+        DisplayName="Python Host App"
+        Description="Python Script Engine, acting as a Host App"
+        BackgroundColor="transparent"
+        Square150x150Logo="Images\Square150x150Logo.png"
+        Square44x44Logo="Images\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"  Square71x71Logo="Images\SmallTile.png" Square310x310Logo="Images\LargeTile.png"/>
+        <uap:SplashScreen Image="Images\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <uap5:Extension Category="windows.appExecutionAlias">
+          <uap5:AppExecutionAlias desktop4:Subsystem="console">
+            <uap5:ExecutionAlias Alias="PyScriptEngine.exe" />
+            <uap5:ExecutionAlias Alias="PyEngine.exe" />
+          </uap5:AppExecutionAlias>
+        </uap5:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="packageManagement" />
+  </Capabilities>
+  <Extensions>
+    <uap10:Extension Category="windows.hostRuntime"
+          Executable="PyScriptEngine\PyScriptEngine.exe"
+          uap10:RuntimeBehavior="packagedClassicApp"
+          uap10:TrustLevel="mediumIL">
+      <uap10:HostRuntime Id="PythonHost"/>
+    </uap10:Extension>
+  </Extensions>
+</Package>
