@@ -18,7 +18,7 @@
   <ItemGroup>
     <None Include="$(PkgPython)\tools\*.dll" CopyToOutputDirectory="PreserveNewest" />
     <None Include="$(PkgPython)\tools\DLLs\*.*" Link="DLLs\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="$(PkgPython)\tools\Lib\**\*" Link="Lib\%(RecursiveDir)\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgPython)\tools\Lib\**\*" Link="Lib\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
