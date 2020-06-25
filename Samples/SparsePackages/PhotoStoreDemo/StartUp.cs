@@ -23,8 +23,11 @@ namespace PhotoStoreDemo
             //if app isn't running with identity, register its sparse package
             if (!ExecutionMode.IsRunningWithIdentity())
             {
-                string externalLocation = @"C:\Users\tajimha.000\source\repos\tajimha\alacarte\SparsePkg\PhotoStoreDemo\bin\x64\Debug\";
-                string sparsePkgPath = @"C:\Users\tajimha.000\source\repos\tajimha\alacarte\SparsePkg\PhotoStoreDemo.msix";
+                //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
+                //sparsePkgPath to match the path to your signed Sparse Package (.msix). 
+                //Note that these values cannot be relative paths and must be complete paths
+                string externalLocation = @"";
+                string sparsePkgPath = @"";
 
                 //Attempt registration
                 if (registerSparsePackage(externalLocation, sparsePkgPath))
