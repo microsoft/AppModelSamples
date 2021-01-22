@@ -2,7 +2,7 @@
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
   <assemblyIdentity version="1.0.0.0" name="PhotoStoreDemo.app"/>
   <msix xmlns="urn:schemas-microsoft-com:msix.v1"
-          publisher="CN=FTJ"
+          publisher="CN=Contoso"
           packageName="PhotoStoreDemo"
           applicationId="PhotoStoreDemo"
         />
