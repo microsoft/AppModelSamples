@@ -11,7 +11,7 @@ namespace PhotoStoreDemo
     {
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        static extern int GetCurrentPackageFullName(ref int packageFullNameLength, ref StringBuilder packageFullName);
+        static extern int GetCurrentPackageFullName(ref int packageFullNameLength, StringBuilder packageFullName);
 
         internal static bool IsRunningWithIdentity()
         {
@@ -23,12 +23,47 @@ namespace PhotoStoreDemo
             {
                 StringBuilder sb = new StringBuilder(1024);
                 int length = 0;
-                int result = GetCurrentPackageFullName(ref length, ref sb);
+                int result = GetCurrentPackageFullName(ref length, sb);
 
                 return result != 15700;
             }
         }
 
+        internal static string GetCurrentPackageFullName()
+        {
+            if (isWindows7OrLower())
+            {
+                System.Diagnostics.Debug.WriteLine("Appmodel packaging is not available on this version of Windows.");
+                return null;
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder(1024);
+                int length = 0;
+                int result = GetCurrentPackageFullName(ref length, sb);
+
+                if (result != 15700)
+                {
+                    sb.EnsureCapacity(length);
+                    result = GetCurrentPackageFullName(ref length, sb);
+                    if (result == 0)
+                    {
+                        return sb.ToString();
+                    }
+                    else
+                    {
+                        System.ComponentModel.Win32Exception win32Exception = new System.ComponentModel.Win32Exception(result);
+                        System.Diagnostics.Debug.WriteLine(win32Exception.Message);
+                    }
+                }
+                else
+                {
+                    System.ComponentModel.Win32Exception win32Exception = new System.ComponentModel.Win32Exception(result);
+                    System.Diagnostics.Debug.WriteLine(win32Exception.Message);
+                }
+                return null;
+            }
+        }
         private static bool isWindows7OrLower()
         {
             int versionMajor = Environment.OSVersion.Version.Major;
