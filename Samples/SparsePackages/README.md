@@ -34,4 +34,5 @@ A non-packaged WPF app that installs a Signed Sparse Package and uses it to act 
 
 ### Removing the package
 If you need to remove the package from package manager you can run the following command in an admin command prompt:
+
 powershell -c “get-appxpackage -name \*photostore\* | remove-appxpackage"
