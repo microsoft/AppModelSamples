@@ -8,6 +8,7 @@ You can learn more about Signed Sparse Packages and Identity, Registration & Act
 
 1. Windows SDK version 10.0.19000.0 +
 2. Windows OS version 10.0.19000.0 +
+3. Microsoft Visual C++ Redistributables
 
 ### PhotoStoreDemo
 
