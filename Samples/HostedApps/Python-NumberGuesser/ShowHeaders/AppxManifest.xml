@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap uap10 rescap build" xmlns:build="http://schemas.microsoft.com/developer/appx/2015/build">
-  <Identity Name="ShowHeaders" Publisher="CN=AppModelSamples, OID.2.25.311729368913984317654407730594956997722=1" Version="1.0.0.0" ProcessorArchitecture="x64" />
+  <Identity Name="ShowHeadersPythonApp" Publisher="CN=AppModelSamples, OID.2.25.311729368913984317654407730594956997722=1" Version="1.0.0.0" ProcessorArchitecture="x64" />
   <Properties>
-    <DisplayName>ShowHeaders</DisplayName>
+    <DisplayName>Show Headers (HAM)</DisplayName>
     <PublisherDisplayName>AppModelSamples</PublisherDisplayName>
     <Logo>Images\Logo.png</Logo>
   </Properties>
@@ -14,8 +14,8 @@
     <Resource Language="EN-US" />
   </Resources>
   <Applications>
-    <Application Id="ShowHeadersApp" uap10:HostId="PythonHost" uap10:Parameters="-Script &quot;script.py&quot;">
-      <uap:VisualElements DisplayName="Show Headers" Description="Show Headers" BackgroundColor="transparent" Square150x150Logo="Images\Logo.png" Square44x44Logo="Images\Logo.png">
+    <Application Id="ShowHeadersPythonApp" uap10:HostId="PythonHost" uap10:Parameters="-Script &quot;script.py&quot;">
+      <uap:VisualElements DisplayName="Show HTTP Headers (HAM)" Description="Show HTTP Headers (HAM)" BackgroundColor="transparent" Square150x150Logo="Images\Logo.png" Square44x44Logo="Images\Logo.png">
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.shareTarget">
