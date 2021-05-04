@@ -2,7 +2,8 @@ import sys
 import urllib.request
 
 if (len(sys.argv) < 2):
-    print("No URL provided")
+    print("This app expects to be called from a 'Share' operation.")
+    input("Press enter to exit...")
     exit()
 
 url = urllib.request.urlopen(sys.argv[1])
