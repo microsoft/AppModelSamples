@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
 using Windows.Management.Deployment;
 
 namespace PyScriptEngine
@@ -27,6 +30,25 @@ namespace PyScriptEngine
             Console.WriteLine();
 
             bool result = false;
+
+            // Check for Share operations -- we only support WebLink (URLs) in this sample.
+            List<string> scriptArguments = new List<string>();
+            var activatedArgs = AppInstance.GetActivatedEventArgs();
+            if (activatedArgs != null && activatedArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.ShareTarget)
+            {
+                var shareArgs = activatedArgs as ShareTargetActivatedEventArgs;
+                var dataPackage = shareArgs.ShareOperation.Data;
+                if (dataPackage.AvailableFormats.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.WebLink))
+                {
+                    var uri = (await dataPackage.GetWebLinkAsync()).AbsoluteUri;
+                    scriptArguments.Add(uri);
+                    shareArgs.ShareOperation.ReportCompleted();
+
+                    // Share operations drop the command-line args from the manifest, so we have to 
+                    // re-create them.
+                    args = FixupArgsForShare();
+                }
+            }
 
             if ((args.Length != 2) && (args.Length != 3))
             {
@@ -79,7 +101,7 @@ namespace PyScriptEngine
 
                 // Run the provided script
                 case "-script":
-                    result = LaunchHostedPackage(param);
+                    result = LaunchHostedPackage(param, scriptArguments);
                     break;
 
                 // Unknown error
@@ -91,16 +113,33 @@ namespace PyScriptEngine
             return result ? 0 : 2;
         }
 
-        static bool LaunchHostedPackage(string filename)
+        // When launched as a Share Target, we don't get command-line args, so we will go probing
+        // for the script to launch instead. This sample blindly calls the first python script it
+        // finds; another option would be to have a naming convention like "hosted_app.py"
+        private static string[] FixupArgsForShare()
+        {
+            var filenames = Directory.GetFiles(Package.Current.InstalledPath, "*.py");
+            if (filenames.Length == 0)
+            {
+                return new string[0];
+            }
+
+            return new[] { "-Script", filenames[0] };
+        }
+
+        static bool LaunchHostedPackage(string filename, IList<string> scriptArguments)
         {
             // The host 'pyscriptengine' will be running under the identity of the hosted app
             var scriptFullName = Path.Combine(Package.Current.InstalledPath, filename);
             var displayName = Package.Current.DisplayName;
 
+            scriptArguments.Insert(0, displayName);
+            scriptArguments.Insert(1, scriptFullName);
+
             Console.WriteLine($"Launching script: {scriptFullName}...");
             Console.WriteLine();
 
-            return NativeMethods.RunPythonScript(2, new[] { displayName, scriptFullName }) == 0;
+            return NativeMethods.RunPythonScript(scriptArguments.Count, scriptArguments.ToArray()) == 0;
         }
 
         static void Usage()
