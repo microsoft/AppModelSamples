@@ -70,43 +70,49 @@ the hosted app.
 In a real app, the host would automatically load and execute the hosted app's code; this sample requires
 you to press the button to do so.
 
-## Python host & Number Guesser game
+## Python host plus hosted apps
 In this example, the host is comprised of 2 projects – first is PyScriptEngine which is wrapper written in C# and makes use of the Python nuget package to run python scripts. 
 This wrapper parses the command line and has the capability to register a manifest as well as launch the python executable with a path to a script file. 
 The second project is PyScriptEnginePackage which is a Windows Application Packaging Project that installs PyScriptEngine and registers the manifest that includes the HostRuntime extension.
 ### NumberGuesser
-The Hosted App is made up of a python script and visual assets. It doesn’t contain any PE files. 
-It includes an application manifest where the declarations for HostRuntimeDependency and HostId are declared that identifies PyScriptEngine as its Host. 
+The Hosted App is made up of a python script and visual assets. It doesn’t contain any executable files. 
+It includes an application manifest where the declarations for `HostRuntimeDependency` and `HostId` are declared that identifies PyScriptEngine as its Host. 
 The manifest also contains the Unsigned Publisher OID entry that is required for an unsigned package.
+### Show Headers
+This Hosted App is a simple script that will dump the HTTP headers from any URI that you Share with it via Windows' "Share" feature. Unlike the
+Number Guessing game, this sample doesn't include an MSIX project but relies only on the Python script, the AppXManifest, and a logo image. This
+is about the most basic a Hosted App can be.
 
 ### Building and running the sample
 1. Make sure your machine has Developer Mode turned on.
-2. Open PyScriptEngine.sln solution in Visual Studio
-3. Retarget the `PyScriptEnginePackage` project to the 10.0.19041 SDK or higher version installed on your machine.
-4. Build & Deploy `PyScriptEnginePackage` 
-5. Because the host app declares an appexecutionalias, you now go to a command prompt and run “pyscriptengine” to get the usage notice:
+1. Open PyScriptEngine.sln solution in Visual Studio
+1. Retarget the `PyScriptEnginePackage` project to the 10.0.19041 SDK or higher version installed on your machine.
+1. Build & Deploy `PyScriptEnginePackage` 
+1. Because the host app declares an appexecutionalias, you now go to a command prompt and run "pyengine" to get the usage notice:
 
-> C:\repos\AppModelSamples>pyscriptengine<br>
-> PyScriptEngine.exe, a simple host for running Python scripts.<br>
-> See https://github.com/microsoft/AppModelSamples for source.
-> 
-> Usage:
-> 
->   To register a loose package:
-> 
->     PyScriptEngine.exe -Register <AppXManifest.xml>
-> 
->   To register an MSIX package:
-> 
->     PyScriptEngine.exe -AddPackage <MSIX-file> [-unsigned]
-> 
->     The optional -unsigned parameter is used if the package is unsigned.
->     In this case, the package cannot include any executable files; only
->     content files (like .py scripts or images) for the Host to execute.
-> 
->   To run a registered package, run it from the Start Menu.
+    > C:\repos\AppModelSamples>pyscriptengine<br>
+    > PyScriptEngine.exe, a simple host for running Python scripts.<br>
+    > See https://github.com/microsoft/AppModelSamples for source.
+    > 
+    > Usage:
+    > 
+    >   To register a loose package:
+    > 
+    >     PyScriptEngine.exe -Register <AppXManifest.xml>
+    > 
+    >   To register an MSIX package:
+    > 
+    >     PyScriptEngine.exe -AddPackage <MSIX-file> [-unsigned]
+    > 
+    >     The optional -unsigned parameter is used if the package is unsigned.
+    >     In this case, the package cannot include any executable files; only
+    >     content files (like .py scripts or images) for the Host to execute.
+    > 
+    >   To run a registered package, run it from the Start Menu.
 
-6.	There are 2 ways to register the Hosted App, NumberGuesser, (a) with the loose file AppxManifest.xml or (b) building the msix package.<br>
+### Register the Number Guessing game
+
+1. There are two ways to register the NumberGuesser Hosted App, (a) with the loose file `AppxManifest.xml` or (b) building the msix package.<br>
     (a) To register the hosted application via the file manifest run the following from the commandline: 
 
     > C:\repos\AppModelSamples\Samples\HostedApps\Python-NumberGuesser>pyscriptengine -register .\NumberGuesser\AppxManifest.xml
@@ -131,6 +137,19 @@ The manifest also contains the Unsigned Publisher OID entry that is required for
     > 
     > Success! The app should now appear in the Start Menu.
 
-9.	Now, click on "NumberGuesser (Manifest only)" or "NumberGuesser (MSIX)" in your start menu, and run the game!
+1. Now, click on "NumberGuesser (Manifest only)" or "NumberGuesser (MSIX)" in your start menu, and run the game!
 
+### Register the Show Headers utility.
 
+1. To register the Show Headers utility, simply point to the AppXManifest file:
+
+    > C:\repos\AppModelSamples\Samples\HostedApps\Python-NumberGuesser>pyscriptengine -register .\ShowHeaders\AppxManifest.xml
+    >
+    > PyScriptEngine.exe, a simple host for running Python scripts. <br>
+    > See https://github.com/microsoft/AppModelSamples for source.
+    >    
+    > Installing manifest file:///C:/repos/AppModelSamples/Samples/HostedApps/Python-NumberGuesser/ShowHeaders/AppxManifest.xml...
+    >    
+    > Success! The app should now appear in the Start Menu.
+
+1. Now, find an app that will "Share" a URL and try sharing to the Show Headers app. You can use the Feedback Hub to open any feedback item and share a link from there.
