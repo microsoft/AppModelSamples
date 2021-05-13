@@ -95,25 +95,7 @@ class __declspec(uuid("3282E233-C5D3-4533-9B25-44B8AAAFACFA")) TestExplorerComma
 {
 public:
     const wchar_t* Title() override { return L"PhotoStore Command1"; }
-    const EXPCMDSTATE State(_In_opt_ IShellItemArray* selection) override
-    {
-        [&] {
-            ComPtr<IShellItem> item;
-            if (selection)
-            {
-                RETURN_IF_FAILED(selection->GetItemAt(0, &item));
-                wil::unique_cotaskmem_string displayName;
-                RETURN_IF_FAILED(item->GetDisplayName(SIGDN_PARENTRELATIVEPARSING, &displayName));
-                if (wcsstr(displayName.get(), L"slow") != nullptr)
-                {
-                    Sleep(500);
-                }
-            }
-            return S_OK;
-        }();
-
-        return ECS_DISABLED;
-    }
+    const EXPCMDSTATE State(_In_opt_ IShellItemArray* selection) override { return ECS_DISABLED; }
 };
 
 class __declspec(uuid("817CF159-A4B5-41C8-8E8D-0E23A6605395")) TestExplorerCommand2Handler final : public TestExplorerCommandBase
