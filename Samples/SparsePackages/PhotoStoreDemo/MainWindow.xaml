@@ -125,6 +125,12 @@
             <Setter Property="Foreground" Value="MidnightBlue" />
         </Style>
 
+        <Style x:Key="Simple" TargetType="{x:Type MenuItem}">
+            <Setter Property = "Background" Value= "{DynamicResource ButtonGradient}"/>
+            <Setter Property = "Foreground" Value= "{DynamicResource ButtonGradient}"/>
+            <!--<Setter Property = "Height" Value= "{DynamicResource {x:Static SystemParameters.CaptionHeightKey}}"/>-->
+        </Style>
+
         <!-- DATA TEMPLATES -->
 
         <DataTemplate DataType="{x:Type local:ImageFile}">
@@ -688,6 +694,13 @@
                 Click="Add_Via_Toast_Click"
                 Width="76"
                 Margin="0,0,324,42" Content="Add Via Toast"/>
+            <Menu Margin="0,-20,0,25">
+                <MenuItem Header="_Register">
+                    <MenuItem Header="Loose File (DevMode)" Click="LooseFileRegistration_Click"/>
+                    <MenuItem Header="Unsigned MSIX (Admin)" Click="UnsignedMSIXRegistration_Click"/>
+                    <MenuItem Header="Signed MSIX" Click="SignedMSIXRegistration_Click"/>
+                </MenuItem>
+            </Menu>
         </Grid>
     </Viewbox>
 </Window>

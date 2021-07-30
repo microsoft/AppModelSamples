@@ -4,6 +4,6 @@
   <msix xmlns="urn:schemas-microsoft-com:msix.v1"
           publisher="CN=Contoso"
           packageName="PhotoStoreDemo"
-          applicationId="PhotoStoreDemo"
+          applicationId="PhotoStoreDemoApp"
         />
 </assembly>

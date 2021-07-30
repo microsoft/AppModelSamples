@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0'">
+    <VisualStudioVersion>15.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM64">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM64">
+      <Configuration>Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup>
+    <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
+  </PropertyGroup>
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
+  <PropertyGroup>
+    <ProjectGuid>1c32d4b1-4cfd-4444-87ea-01bd751a10ce</ProjectGuid>
+    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    
+    <!--Tell the packaging project what the entrypoint is-->
+    <EntryPointExe>PhotoStoreDemo.exe</EntryPointExe>
+    <!--Turn off ipackage content avalidation as sparse packages do not include  binariesforto avoid APPX0703 error-->
+    <DisableAppxManifestItemPackageContentValidation>true</DisableAppxManifestItemPackageContentValidation>
+  
+  </PropertyGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\SplashScreen.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LockScreenLogo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Square150x150Logo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Square44x44Logo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\StoreLogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Wide310x150Logo.scale-200.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets">
+  </Import>
+  <PropertyGroup>
+  </PropertyGroup>
+  <!--<Target Name="_ValidatePresenceOfAppxManifestItems" DependsOnTargets="$(ValidatePresenceOfAppxManifestItemsDependsOn)">
+
+      <ItemGroup>
+        <CustomAppxManifest Include="@(Content)" Condition="'%(Identity)' == '$(AppxManifestFileName)'" />
+      </ItemGroup>
+    -->
+  <!--<ValidateAppxManifestItems AppxPackageProject="$(AppxPackage)"
+                               AppxManifestItems="@(AppxManifest)"
+                               CustomAppxManifestItems="@(CustomAppxManifest)"
+                               VsTelemetrySession="$(VsTelemetrySession)"
+                               ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="IdentityName" PropertyName="AppxManifestIdentityName" />
+      <Output TaskParameter="IdentityVersion" PropertyName="AppxManifestIdentityVersion" />
+    </ValidateAppxManifestItems>-->
+  <!--
+    <PropertyGroup>
+      <AppxManifestIdentityName>PhotoStoreDemo</AppxManifestIdentityName>
+      <AppxManifestIdentityVersion>1.0.0.0</AppxManifestIdentityVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <SourceAppxManifest Include="@(AppxManifest)" Condition="'@(AppxManifest)' != ''" />
+      <SourceAppxManifest Include="@(CustomAppxManifest)" Condition="'@(CustomAppxManifest)' != ''" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(ProjectPriIndexName)' == ''">
+      <ProjectPriIndexName Condition="'$(AppxPackage)' == 'true'">$(AppxManifestIdentityName)</ProjectPriIndexName>
+      <ProjectPriIndexName Condition="'$(AppxPackage)' != 'true' and '$(AppxPriInitialPath)' == ''">$(TargetName)</ProjectPriIndexName>
+      <ProjectPriIndexName Condition="'$(AppxPackage)' != 'true' and '$(AppxPriInitialPath)' != ''">$(AppxPriInitialPath)</ProjectPriIndexName>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <_CustomAppxManifestUsed Condition="'@(CustomAppxManifest)' == ''">false</_CustomAppxManifestUsed>
+      <_CustomAppxManifestUsed Condition="'@(CustomAppxManifest)' != ''">true</_CustomAppxManifestUsed>
+    </PropertyGroup>
+  </Target>-->
+  <!--<PropertyGroup>
+    <WapProjAfterGenerateAppxManifestDependsOn>
+      _GenerateDesktopBridgeAppxManifest;
+      _ValidateAppxManifest;
+      _WritePayloadFiles;
+      $(WapProjAfterGenerateAppxManifestDependsOn)
+    </WapProjAfterGenerateAppxManifestDependsOn>
+  </PropertyGroup>-->
+  <!--Ignore APPX0703 error-->
+  <!--<Target Name="IgnoreAPPX0703" BeforeTargets="AfterGenerateAppxManifest">
+    <GenerateDesktopBridgeAppxManifest></GenerateDesktopBridgeAppxManifest>
+    _ValidateAppxManifest;
+    _WritePayloadFiles;
+  </Target>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.19041.8" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

@@ -28,6 +28,10 @@ using System.Windows.Media.Imaging;
 using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
 using System.Reflection;
+using Windows.Management.Deployment;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Security.Principal;
 
 namespace PhotoStoreDemo
 {
@@ -48,7 +52,7 @@ namespace PhotoStoreDemo
             buttonAddPhoto.ToolTip = PhotosFolder.Current;
         }
 
-       
+
 
         private void WindowLoaded(object sender, EventArgs e)
         {
@@ -63,9 +67,9 @@ namespace PhotoStoreDemo
                 this.Title = "Desktop App";
                 this.TitleSpan.Foreground = Brushes.Navy;
             }
-            
+
             var layer = AdornerLayer.GetAdornerLayer(CurrentPhoto);
-            _cropSelector = new RubberbandAdorner(CurrentPhoto) {Window = this};
+            _cropSelector = new RubberbandAdorner(CurrentPhoto) { Window = this };
             layer.Add(_cropSelector);
 #if VISUALCHILD
             CropSelector.Rubberband.Visibility = Visibility.Hidden;
@@ -74,9 +78,9 @@ namespace PhotoStoreDemo
             CropSelector.ShowRect = false;
 #endif
 
-            Photos = (PhotoList) (this.Resources["Photos"] as ObjectDataProvider)?.Data;
-            Photos.Init(PhotosFolder.Current); 
-            ShoppingCart = (PrintList) (this.Resources["ShoppingCart"] as ObjectDataProvider)?.Data;
+            Photos = (PhotoList)(this.Resources["Photos"] as ObjectDataProvider)?.Data;
+            Photos.Init(PhotosFolder.Current);
+            ShoppingCart = (PrintList)(this.Resources["ShoppingCart"] as ObjectDataProvider)?.Data;
 
             // listen for files being created via Share UX
             FileSystemWatcher watcher = new FileSystemWatcher(PhotosFolder.Current);
@@ -167,7 +171,7 @@ namespace PhotoStoreDemo
         {
             if (ShoppingCart.Count > 0)
             {
-                var scaleDuration = new TimeSpan(0, 0, 0, 0, ShoppingCart.Count*200);
+                var scaleDuration = new TimeSpan(0, 0, 0, 0, ShoppingCart.Count * 200);
                 var progressAnimation = new DoubleAnimation(0, 100, scaleDuration, FillBehavior.Stop);
                 UploadProgressBar.BeginAnimation(RangeBase.ValueProperty, progressAnimation);
                 ShoppingCart.Clear();
@@ -181,7 +185,7 @@ namespace PhotoStoreDemo
         {
             if (CurrentPhoto.Source != null)
             {
-                var img = (BitmapSource) (CurrentPhoto.Source);
+                var img = (BitmapSource)(CurrentPhoto.Source);
                 _undoStack.Push(img);
                 var cache = new CachedBitmap(img, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
                 CurrentPhoto.Source = new TransformedBitmap(cache, new RotateTransform(90.0));
@@ -206,7 +210,7 @@ namespace PhotoStoreDemo
         {
             if (CurrentPhoto.Source != null)
             {
-                var img = (BitmapSource) (CurrentPhoto.Source);
+                var img = (BitmapSource)(CurrentPhoto.Source);
                 _undoStack.Push(img);
                 CurrentPhoto.Source = new FormatConvertedBitmap(img, PixelFormats.Gray8, BitmapPalettes.Gray256, 1.0);
                 if (false == UndoButton.IsEnabled)
@@ -238,14 +242,14 @@ namespace PhotoStoreDemo
         {
             if (CurrentPhoto.Source != null)
             {
-                var img = (BitmapSource) (CurrentPhoto.Source);
+                var img = (BitmapSource)(CurrentPhoto.Source);
                 _undoStack.Push(img);
                 var rect = new Int32Rect
                 {
-                    X = (int) (_cropSelector.SelectRect.X*img.PixelWidth/CurrentPhoto.ActualWidth),
-                    Y = (int) (_cropSelector.SelectRect.Y*img.PixelHeight/CurrentPhoto.ActualHeight),
-                    Width = (int) (_cropSelector.SelectRect.Width*img.PixelWidth/CurrentPhoto.ActualWidth),
-                    Height = (int) (_cropSelector.SelectRect.Height*img.PixelHeight/CurrentPhoto.ActualHeight)
+                    X = (int)(_cropSelector.SelectRect.X * img.PixelWidth / CurrentPhoto.ActualWidth),
+                    Y = (int)(_cropSelector.SelectRect.Y * img.PixelHeight / CurrentPhoto.ActualHeight),
+                    Width = (int)(_cropSelector.SelectRect.Width * img.PixelWidth / CurrentPhoto.ActualWidth),
+                    Height = (int)(_cropSelector.SelectRect.Height * img.PixelHeight / CurrentPhoto.ActualHeight)
                 };
                 CurrentPhoto.Source = new CroppedBitmap(img, rect);
 #if VISUALCHILD
@@ -265,7 +269,7 @@ namespace PhotoStoreDemo
         private void Undo(object sender, RoutedEventArgs e)
         {
             if (_undoStack.Count > 0)
-                CurrentPhoto.Source = (BitmapSource) _undoStack.Pop();
+                CurrentPhoto.Source = (BitmapSource)_undoStack.Pop();
             if (0 == _undoStack.Count)
                 UndoButton.IsEnabled = false;
 #if VISUALCHILD
@@ -290,7 +294,7 @@ namespace PhotoStoreDemo
             var result = ofd.ShowDialog();
             if (result == false) return;
             ImageFile item = new ImageFile(ofd.FileName);
-            item.AddToCache();           
+            item.AddToCache();
         }
 
         private void Add_Via_Toast_Click(object sender, RoutedEventArgs e)
@@ -321,6 +325,146 @@ namespace PhotoStoreDemo
             toastNotifier.Show(notification);
         }
 
-        
+        private async void LooseFileRegistration_Click(object sender, RoutedEventArgs e)
+        {
+            //register loose file, aka "devmode"
+            var success = await registerSparsePackage(true, true);
+            //if success, restart app
+            DisplayResult(success);
+        }
+
+        private async void UnsignedMSIXRegistration_Click(object sender, RoutedEventArgs e)
+        {
+            //check elevation level
+            if (!IsElevated)
+            {
+                MessageBox.Show("Process is not running elevated, try RunAs Admin");
+                return;
+            }
+            //register msix, allowunsigned=true
+            var success = await registerSparsePackage(false, true);
+            DisplayResult(success);
+
+        }
+
+
+        private async void SignedMSIXRegistration_Click(object sender, RoutedEventArgs e)
+        {
+            //register msix
+            var success = await registerSparsePackage(false, false);
+            //if success, restart app
+            DisplayResult(success);
+
+        }
+
+        private static async Task<bool> registerSparsePackage(bool registerLooseFile, bool AllowUnsigned = false)
+        {
+            bool registration = false;
+
+            //get the manifest or msix package 
+            //this code assumes it is in the same folder as the EXE
+            string fileName = Process.GetCurrentProcess().MainModule.FileName;
+            string externalLocation = Path.GetDirectoryName(fileName);
+
+            //for loose file (aka DevMode) registration, pass in just the path to the folder that contains appxmanifest.xml
+            //for msix package registration, use the msix filename
+            string registerFileName = registerLooseFile ? "appxmanifest.xml" : Path.GetFileNameWithoutExtension(fileName) + ".msix";
+            //
+            string sparsePkgPath = Path.Combine(externalLocation, registerFileName);
+            //string sparsePkgPath = @"E:\repos\AppModelSamples\Samples\SparsePackages\PhotoStoreDemoPkg";
+
+            try
+            {
+                Uri externalUri = new Uri(externalLocation);
+                Uri packageUri = new Uri(sparsePkgPath);
+
+                Debug.WriteLine("exe Location {0}", externalLocation);
+                Debug.WriteLine("msix Address {0}", sparsePkgPath);
+
+                Debug.WriteLine("  exe Uri {0}", externalUri);
+                Debug.WriteLine("  msix Uri {0}", packageUri);
+
+                PackageManager packageManager = new PackageManager();
+
+                //Declare use of an external location
+                //var options = new AddPackageOptions();
+                var options = new RegisterPackageOptions();
+                options.ExternalLocationUri = externalUri;
+                if (AllowUnsigned)
+                {
+                    //options.AllowUnsigned = AllowUnsigned;
+                    options.DeveloperMode = true;
+                        
+                }
+
+                //Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
+                //var deploymentOperation = await packageManager.AddPackageByUriAsync(packageUri, options);
+                var deploymentOperation = await packageManager.RegisterPackageByUriAsync(packageUri, options);
+                registration = deploymentOperation.IsRegistered;
+
+                #region oldcode
+                //ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
+
+                //deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
+
+                //Console.WriteLine("Installing package {0}", sparsePkgPath);
+
+                //Debug.WriteLine("Waiting for package registration to complete...");
+
+                //opCompletedEvent.WaitOne();
+
+                //if (deploymentOperation.Status == Windows.Foundation.AsyncStatus.Error)
+                //{
+                //    Windows.Management.Deployment.DeploymentResult deploymentResult = deploymentOperation.GetResults();
+                //    Debug.WriteLine("Installation Error: {0}", deploymentOperation.ErrorCode);
+                //    Debug.WriteLine("Detailed Error Text: {0}", deploymentResult.ErrorText);
+
+                //}
+                //else if (deploymentOperation.Status == Windows.Foundation.AsyncStatus.Canceled)
+                //{
+                //    Debug.WriteLine("Package Registration Canceled");
+                //}
+                //else if (deploymentOperation.Status == Windows.Foundation.AsyncStatus.Completed)
+                //{
+                //    registration = true;
+                //    Debug.WriteLine("Package Registration succeeded!");
+                //}
+                //else
+                //{
+                //    Debug.WriteLine("Installation status unknown");
+                //}
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("AddPackageSample failed, error message: {0}", ex.Message);
+                Debug.WriteLine("Full Stacktrace: {0}", ex.ToString());
+
+                return registration;
+            }
+
+            return registration;
+        }
+
+        private static void DisplayResult(bool success)
+        {
+            if (success)
+            {
+                //if success, restart app
+                MessageBox.Show("Registration Success! Please restart app");
+            }
+            else
+            {
+                MessageBox.Show("Registration Failed");
+            }
+        }
+
+        public static bool IsElevated
+        {
+            get
+            {
+                return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
     }
 }

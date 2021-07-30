@@ -26,9 +26,10 @@ namespace PhotoStoreDemo
                 //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
                 //sparsePkgPath to match the path to your signed Sparse Package (.msix). 
                 //Note that these values cannot be relative paths and must be complete paths
-                string externalLocation = @"";
-                string sparsePkgPath = @"";
-
+                string externalLocation = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                string msixFileName = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule.FileName) + ".msix";
+                string sparsePkgPath = Path.Combine(externalLocation, msixFileName); // Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                
                 //Attempt registration
                 if (registerSparsePackage(externalLocation, sparsePkgPath))
                 {
@@ -163,7 +164,8 @@ namespace PhotoStoreDemo
                 var options = new AddPackageOptions();
                 options.ExternalLocationUri = externalUri;
 
-                Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
+                //Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
+                var deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
 
                 ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
 
@@ -210,7 +212,8 @@ namespace PhotoStoreDemo
         private static void removeSparsePackage() //example of how to uninstall a Sparse Package
         {
             PackageManager packageManager = new PackageManager();
-            Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
+            var deploymentOperation = packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
+
             ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
 
             deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
