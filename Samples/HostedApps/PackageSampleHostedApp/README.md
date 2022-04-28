@@ -1,11 +1,11 @@
 ## Introduction
-In this example, there are two projects – first is PackageSampleHostedApp which is the host app in C# and second is the PackageSampleChild that is the child app. PackageSampleHostedApp is derived from a publically availble UWP sample app called Package: https://github.com/microsoft/Windows-universal-samples/tree/main/Samples/Package. Package sample app was migrated to the latest .Net6.0, WindowsAppSDK and WinUI3 and a new Scenario 4 called "Hosted App Management" was added to demo new functionality in Hosted App Model such as "PackageCatalog notifications" and "FindRelatedPackages to support querying Packages with HostRuntimes & their children." This new sample is called PackageSampleHostedApp. 
+In this example, there are two projects – first is PackageSampleHostedApp which is the host app in C# and second is the PackageSampleChild that is the child app. PackageSampleHostedApp is derived from a publically availble UWP sample app called Package: https://github.com/microsoft/Windows-universal-samples/tree/main/Samples/Package. Package sample app was migrated to the latest .Net6.0, WindowsAppSDK and WinUI3 and a new Scenario 4 called "Hosted App Management" was added to demo new functionality in Hosted App Model such as "PackageCatalog notifications" and "the new FindRelatedPackages API to support querying Packages with HostRuntimes & their children." This new sample is called PackageSampleHostedApp. 
 
 # App package information sample
 
 Shows how to get package info by using the Windows Runtime packaging API ([Windows.ApplicationModel.Package](http://msdn.microsoft.com/library/windows/apps/br224667) and [Windows.ApplicationModel.PackageId](http://msdn.microsoft.com/library/windows/apps/br224668)).
 
-In addition to the already existing features, the sample demos new functionality in Hosted App Model such as "PackageCatalog notifications" and "New API to support querying Packages with HostRuntimes & their children." 
+In addition to the already existing features, the sample demos new functionality in Hosted App Model such as "PackageCatalog notifications" and "the new FindRelatedPackages API to support querying Packages with HostRuntimes & their children." 
 
 ## Build the sample
 
@@ -29,8 +29,8 @@ This API exposes the dependencies and then dependents for a given package as a P
 ## About PackageCatalog notifications
 This additional functionality allows Host Runtime Providers to listen specifically to Deployment Notifications of its dependents directly using the options below. 
 
-1. PackageCatalog.OpenForCurrentPackage
+1. PackageCatalog.OpenForCurrentPackage:
 OpenForCurrentPackage() currently allows a package to listen to Deployment notifications about itself and dependent packages. There are 4 types of package dependencies: Optional, Resource, HostRuntime and Framework. We have expanded this functionality to also support HostRuntime dependents. 
 
-2. PackageCatalog.OpenForPackage()
+2. PackageCatalog.OpenForPackage():
 OpenForPackage() will allow listening to any package and its dependents (optional, resource, hostRuntime). This API allows a package (like main Edge package) to listen to Deployment notifications for another package (Edge’s Framework package which acts as a HostRuntime provider) and its dependents(like PWAs).  
