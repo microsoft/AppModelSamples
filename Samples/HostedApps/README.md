@@ -1,4 +1,4 @@
-This repo contains 2 sample applications demonstrating how to use the Hosted AppModel to define a host and a hosted app.
+This repo contains 3  sample applications demonstrating how to use the Hosted AppModel to define a host and a hosted app.
 
 ## Instructions
 You can learn more about the Hosted AppModel in this documentation.
@@ -6,6 +6,8 @@ You can learn more about the Hosted AppModel in this documentation.
 ### Requirements:
 1. Windows SDK version 10.0.19041.0 or higher
 2. Windows OS version 10.0.19041.0 or higher
+3. Windows SDK version 10.0.22593.0 or higher for PackageSampleHostedApp
+4. Windows OS version 10.0.22593.0 or higher for PackageSampleHostedApp
 
 ## WinformsToastHost.Package
 This package contains a simple Windows Forms application that displays the package's identity & 
@@ -153,3 +155,9 @@ is about the most basic a Hosted App can be.
     > Success! The app should now appear in the Start Menu.
 
 1. Now, find an app that will "Share" a URL and try sharing to the Show Headers app. You can use the Feedback Hub to open any feedback item and share a link from there.
+
+### PackageSampleHostedApp 
+
+In this example, there are two projects – first is PackageSampleHostedApp which is the host app in C# and second is the PackageSampleChild that is the child app. PackageSampleHostedApp is derived from a publically availble UWP sample app called [Package](https://github.com/microsoft/Windows-universal-samples/tree/main/Samples/Package). Package sample app was migrated to the latest .Net6.0, WindowsAppSDK and WinUI3 and a new Scenario 4 called "Hosted App Management" was added to demo new functionality in Hosted App Model such as such as the PackageCatalog notifications and additions to the FindRelatedPackages API to support querying Packages that are dependent upon host runtimes. This new sample is called PackageSampleHostedApp. 
+
+Please see the README.md file [here](/AppModelSamples/Samples/HostedApps/PackageSampleHostedApp/README.md) to know about building and running this sample. 
