@@ -13,6 +13,6 @@ So, there are two customized apps in this section. One without plugin (app-witho
 other with plugin (app-with-plugin_1.0.0.0_x64__8h66172c634n0.msix)
 
 The shared package container defintion when deployed would help the first version (app-without-plugin_1.0.0.0_x64__8h66172c634n0.msix) which is 
-without plugin run successfully as there will be a shared runtime container present in the system for these two packages.
+without plugin run successfully as there will be a shared runtime container present in the system for these two packages. Using the shared runtime container, app-without-plugin will be able to use plugins of app-with-plugin as VFS folders of both the apps will be merged when the app-without-plugin is launched.
 ### 
 The shared package container definition XML and the two customized apps need to be deployed in the system for this scenario to execute.
