@@ -16,3 +16,12 @@ The shared package container defintion when deployed would help the first versio
 without plugin run successfully as there will be a shared runtime container present in the system for these two packages. Using the shared runtime container, app-without-plugin will be able to use plugins of app-with-plugin as VFS folders of both the apps will be merged when the app-without-plugin is launched.
 ### 
 The shared package container definition XML and the two customized apps need to be deployed in the system for this scenario to execute.
+
+### Steps
+#### 1. Deploy Shared package container definition
+Add-AppSharedPackageContainer ".\sp-container-definition.xml"
+#### 2. Install the MSIX packages
+app-without-plugin_1.0.0.0_x64__8h66172c634n0.msix
+app-with-plugin_1.0.0.0_x64__8h66172c634n0.msix
+#### 3. Launch app-without-plugin and see the app run successfully.
+
