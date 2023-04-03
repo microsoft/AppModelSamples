@@ -14,4 +14,4 @@ other with plugin (app-with-plugin_1.0.0.0_x64__8h66172c634n0.msix)
 
 The shared package container defintion when deployed would help the first version (app-without-plugin_1.0.0.0_x64__8h66172c634n0.msix) which is 
 without plugin run successfully as there will be a shared runtime container present in the system for these two packages.
-Note: The shared package container definition XML and the two customized apps need to be deployed in the system for this scenario to execute.
+###Note: The shared package container definition XML and the two customized apps need to be deployed in the system for this scenario to execute.
