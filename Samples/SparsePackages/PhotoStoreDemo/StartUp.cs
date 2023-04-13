@@ -210,13 +210,22 @@ namespace PhotoStoreDemo
         private static void removeSparsePackage() //example of how to uninstall a Sparse Package
         {
             PackageManager packageManager = new PackageManager();
-            Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
-            ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
+            string packageFullName = ExecutionMode.GetCurrentPackageFullName();
+            if (packageFullName != null)
+            {
+                Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.RemovePackageAsync(packageFullName);
+                ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
 
-            deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
+                deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
 
-            Debug.WriteLine("Uninstalling package..");
-            opCompletedEvent.WaitOne();
+                Debug.WriteLine("Uninstalling package {0}", packageFullName);
+                opCompletedEvent.WaitOne();
+                Debug.WriteLine("Package {0} successfully uninstalled.", packageFullName);
+            }
+            else
+            {
+                Debug.WriteLine("Could not uninstall package, there was an error getting the package name.");
+            }
         }
 
     }
