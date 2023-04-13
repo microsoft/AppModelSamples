@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AppSharedPackageContainer Name="SPContainer">
-<PackageFamily Name="app-without-plugin_8h66172c634n0" />
-<PackageFamily Name="app-with-plugin_8h66172c634n0" />
+<PackageFamily Name="app-without-image-setup_8h66172c634n0" />
+<PackageFamily Name="app-with-image-setup_8h66172c634n0" />
 </AppSharedPackageContainer>
