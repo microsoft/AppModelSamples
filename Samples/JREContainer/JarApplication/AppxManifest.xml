@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap uap10 rescap">
+  <!--Package created by MSIX Packaging Tool version: 1.2023.418.0-->
+  <Identity Name="JavaVersion" Publisher="CN=TestPublisher" Version="1.0.0.0" ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>JavaVersion</DisplayName>
+    <PublisherDisplayName>JavaVersion</PublisherDisplayName>
+    <Description>None</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:PackageIntegrity>
+      <uap10:Content Enforcement="on" />
+    </uap10:PackageIntegrity>
+  </Properties>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19003.0" MaxVersionTested="10.0.22000.1" />
+    <uap10:HostRuntimeDependency Name="openjdk" Publisher="CN=Contoso Software (FOR LAB USE ONLY), O=Contoso Corporation, C=US" MinVersion="11.0.0.0" />
+  </Dependencies>
+
+  <Applications>
+    <Application Id="VER" uap10:HostId="Java" uap10:Parameters="-jar &quot;$(package.effectivePath)\version.jar&quot;">
+      <uap:VisualElements BackgroundColor="transparent" DisplayName="jEdit" Square150x150Logo="Assets\JEDIT-Square150x150Logo.png" Square44x44Logo="Assets\JEDIT-Square44x44Logo.png" Description="jEdit">
+        <uap:DefaultTile Wide310x150Logo="Assets\JEDIT-Wide310x150Logo.png" Square310x310Logo="Assets\JEDIT-Square310x310Logo.png" Square71x71Logo="Assets\JEDIT-Square71x71Logo.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
