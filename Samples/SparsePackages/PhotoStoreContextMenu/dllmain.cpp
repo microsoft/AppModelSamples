@@ -46,11 +46,25 @@ public:
     IFACEMETHODIMP GetIcon(_In_opt_ IShellItemArray*, _Outptr_result_nullonfailure_ PWSTR* icon) { *icon = nullptr; return E_NOTIMPL; }
     IFACEMETHODIMP GetToolTip(_In_opt_ IShellItemArray*, _Outptr_result_nullonfailure_ PWSTR* infoTip) { *infoTip = nullptr; return E_NOTIMPL; }
     IFACEMETHODIMP GetCanonicalName(_Out_ GUID* guidCommandName) { *guidCommandName = GUID_NULL;  return S_OK; }
-    IFACEMETHODIMP GetState(_In_opt_ IShellItemArray* selection, _In_ BOOL okToBeSlow, _Out_ EXPCMDSTATE* cmdState)
+// This function determines the state of a command based on certain conditions.
+// It takes a selection of items, a flag indicating whether slow processing is acceptable,
+// and returns the state of the command in the 'cmdState' parameter.
+IFACEMETHODIMP GetState(_In_opt_ IShellItemArray* selection, _In_ BOOL okToBeSlow, _Out_ EXPCMDSTATE* cmdState)
+{
+    // Check if there is a selection and slow processing is allowed.
+    if (selection && okToBeSlow)
     {
-        *cmdState = State(selection);
-        return S_OK;
+        // If both conditions are met, enable the command.
+        // This means the command will be visible and usable.
+        *cmdState = ECS_ENABLED;
+        return S_OK;  // Return success status.
     }
+
+    // If the conditions are not met, hide the command.
+    // This means the command won't be shown under "Show More Options to the user".
+    *cmdState = ECS_HIDDEN;
+    return S_OK;  // Return success status.
+}
     IFACEMETHODIMP Invoke(_In_opt_ IShellItemArray* selection, _In_opt_ IBindCtx*) noexcept try
     {
         HWND parent = nullptr;
