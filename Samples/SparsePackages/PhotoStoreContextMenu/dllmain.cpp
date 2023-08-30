@@ -46,9 +46,46 @@ public:
     IFACEMETHODIMP GetIcon(_In_opt_ IShellItemArray*, _Outptr_result_nullonfailure_ PWSTR* icon) { *icon = nullptr; return E_NOTIMPL; }
     IFACEMETHODIMP GetToolTip(_In_opt_ IShellItemArray*, _Outptr_result_nullonfailure_ PWSTR* infoTip) { *infoTip = nullptr; return E_NOTIMPL; }
     IFACEMETHODIMP GetCanonicalName(_Out_ GUID* guidCommandName) { *guidCommandName = GUID_NULL;  return S_OK; }
+// This function determines the state of a command based on certain conditions.
+// It takes a selection of items, a flag indicating whether slow processing is acceptable,
+// and returns the state of the command in the 'cmdState' parameter.
+// Checks Windows 11
+bool IsWindows11OrLater()
+    {
+        OSVERSIONINFOEX osvi;
+        ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+        osvi.dwBuildNumber = 22000; // Minimum build number for Windows 11
+        DWORDLONG dwlConditionMask = 0;
+        VER_SET_CONDITION(dwlConditionMask, VER_BUILDNUMBER, VER_GREATER_EQUAL);
+
+        return VerifyVersionInfo(&osvi, VER_BUILDNUMBER, dwlConditionMask);
+    }
+
+
+
     IFACEMETHODIMP GetState(_In_opt_ IShellItemArray* selection, _In_ BOOL okToBeSlow, _Out_ EXPCMDSTATE* cmdState)
     {
-        *cmdState = State(selection);
+        
+     
+        bool isWindows11OrLater = IsWindows11OrLater();
+
+      
+        if (isWindows11OrLater)
+        {
+            if (selection && okToBeSlow)
+            {
+                *cmdState = ECS_ENABLED;
+                return S_OK;
+            }
+            *cmdState = ECS_HIDDEN; // Hides the classic context menu on Windows 11
+        }
+        else
+        {
+            // Handle other cases, if necessary.
+            *cmdState = ECS_ENABLED; // Show the context menu item by default on other versions.
+        }
+
         return S_OK;
     }
     IFACEMETHODIMP Invoke(_In_opt_ IShellItemArray* selection, _In_opt_ IBindCtx*) noexcept try
