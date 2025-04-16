@@ -180,24 +180,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
     //sparsePkgPath to match the path to your signed Sparse Package (.msix). 
     //Note that these values cannot be relative paths and must be complete paths
-    std::wstring externalLocation = L"C:\\AppModelSamples\\Samples\\SparsePackages\\SparseCppApp\\Debug";
-    std::wstring sparsePkgPath = L"C:\\AppModelSamples\\Samples\\SparsePackages\\SparseCppSample\\MyCppSparsePackage.msix";
+    std::wstring externalLocation = L"";
+    std::wstring sparsePkgPath = L"";
 
     //Attempt registration
-    auto result = RegisterSparsePackage(externalLocation, sparsePkgPath);
-    if (FAILED(result)) 
+    if (!externalLocation.empty() && !sparsePkgPath.empty())
     {
-        MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"result", MB_ICONERROR);
+        auto result = RegisterSparsePackage(externalLocation, sparsePkgPath);
+        if (result != HRESULT_FROM_WIN32(ERROR_PACKAGES_IN_USE) && FAILED(result))
+        {
+            MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"result", MB_ICONINFORMATION);
+        }
     }
-
-    /*
-    //App is registered and running with identity, handle launch and activation
-    auto activatedEventArgs = winrt::Windows::ApplicationModel::AppInstance::GetActivatedEventArgs();
-    if (activatedEventArgs)
-    {
-        MessageBox(nullptr, L"Activated event args successfully retrieved", L"result", S_OK);
-    }
-    */
 
     MFStartup(MF_VERSION);
 
@@ -220,7 +214,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     // Initialize webcam
     if (FAILED(InitializeWebcam(hwndVideo))) 
     {
-        MessageBox(nullptr, L"Failed to initialize webcam.", L"Error", MB_ICONERROR);
+        MessageBox(nullptr, L"Failed to initialize webcam. Please check if app if running with identity. If not, turn on camera usage for desktop app in Settings and relaunch.", L"Error", MB_ICONERROR);
         return -1;
     }
 
