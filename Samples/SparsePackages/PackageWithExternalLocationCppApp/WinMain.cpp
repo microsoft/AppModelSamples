@@ -180,8 +180,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
     //packagePath to match the path to your signed Sparse Package (.msix). 
     //Note that these values cannot be relative paths and must be complete paths
-    std::wstring externalLocation = L"C:\\AppModelSamples\\Samples\\SparsePackages\\PackageWithExternalLocationCppApp\\Debug";
-    std::wstring packagePath = L"C:\\AppModelSamples\\Samples\\SparsePackages\\PackageWithExternalLocationCppSample\\PackageWithExternalLocationCppSample.msix";
+    std::wstring externalLocation = L"";
+    std::wstring packagePath = L"";
 
     //Attempt registration
     if (!externalLocation.empty() && !packagePath.empty())
@@ -234,4 +234,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     }
 
     return 0;
+}
+
+void RemovePackageWithExternalLocation() // example of how to uninstall a package with external location
+{
+    winrt::Windows::Management::Deployment::PackageManager packageManager;
+    auto deploymentOperation{ packageManager.RemovePackageAsync(L"PackageWithExternalLocationCppSample_1.0.0.0_neutral__h91ms92gdsmmt") };
+    deploymentOperation.get();
 }
