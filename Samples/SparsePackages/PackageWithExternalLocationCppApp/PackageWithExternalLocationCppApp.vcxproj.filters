@@ -38,10 +38,10 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="SparseCppApp.exe.manifest" />
+    <Manifest Include="PackageWithExternalLocationCppApp.exe.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SparseCppApp.rc">
+    <ResourceCompile Include="PackageWithExternalLocationCppApp.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

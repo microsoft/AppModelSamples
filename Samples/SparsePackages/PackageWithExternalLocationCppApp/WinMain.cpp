@@ -164,12 +164,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-HRESULT RegisterSparsePackage(const std::wstring& externalLocation, const std::wstring& sparsePkgPath)  
+HRESULT RegisterPackageWithExternalLocation(const std::wstring& externalLocation, const std::wstring& packagePath)
 { 
     winrt::Windows::Management::Deployment::PackageManager packageManager;  
     winrt::Windows::Management::Deployment::AddPackageOptions addOptions;  
     addOptions.ExternalLocationUri(winrt::Windows::Foundation::Uri(winrt::hstring(externalLocation)));
-    auto result = packageManager.AddPackageByUriAsync(winrt::Windows::Foundation::Uri(winrt::hstring(sparsePkgPath)), addOptions).get();
+    auto result = packageManager.AddPackageByUriAsync(winrt::Windows::Foundation::Uri(winrt::hstring(packagePath)), addOptions).get();
 
     return static_cast<HRESULT>(result.ExtendedErrorCode().value);
 }
@@ -178,18 +178,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
 
     //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
-    //sparsePkgPath to match the path to your signed Sparse Package (.msix). 
+    //packagePath to match the path to your signed Sparse Package (.msix). 
     //Note that these values cannot be relative paths and must be complete paths
-    std::wstring externalLocation = L"";
-    std::wstring sparsePkgPath = L"";
+    std::wstring externalLocation = L"C:\\AppModelSamples\\Samples\\SparsePackages\\PackageWithExternalLocationCppApp\\Debug";
+    std::wstring packagePath = L"C:\\AppModelSamples\\Samples\\SparsePackages\\PackageWithExternalLocationCppSample\\PackageWithExternalLocationCppSample.msix";
 
     //Attempt registration
-    if (!externalLocation.empty() && !sparsePkgPath.empty())
+    if (!externalLocation.empty() && !packagePath.empty())
     {
-        auto result = RegisterSparsePackage(externalLocation, sparsePkgPath);
+        auto result = RegisterPackageWithExternalLocation(externalLocation, packagePath);
         if (result != HRESULT_FROM_WIN32(ERROR_PACKAGES_IN_USE) && FAILED(result))
         {
-            MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"result", MB_ICONINFORMATION);
+            if (result == HRESULT_FROM_WIN32(CERT_E_UNTRUSTEDROOT))
+            {
+                MessageBox(nullptr, L"Please install your certificate to Trusted Root Certification Authorities for Local Machine. Running without identity", L"result", MB_ICONINFORMATION);
+            }
+            else
+            {
+                MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"result", MB_ICONINFORMATION);
+            }
         }
     }
 
@@ -214,7 +221,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
     // Initialize webcam
     if (FAILED(InitializeWebcam(hwndVideo))) 
     {
-        MessageBox(nullptr, L"Failed to initialize webcam. Please check if app if running with identity. If not, turn on camera usage for desktop app in Settings and relaunch.", L"Error", MB_ICONERROR);
+        MessageBox(nullptr, L"Failed to initialize webcam. Please check if app is running with identity. If not, turn on camera usage for desktop app in Settings and relaunch.", L"Error", MB_ICONERROR);
         return -1;
     }
 

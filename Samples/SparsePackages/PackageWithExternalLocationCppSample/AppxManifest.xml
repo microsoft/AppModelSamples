@@ -4,10 +4,10 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
-  <Identity Name="SparseCppSample" Publisher="CN=Contoso" Version="1.0.0.0" ProcessorArchitecture="neutral" />
+  <Identity Name="PackageWithExternalLocationCppSample" Publisher="CN=Contoso" Version="1.0.0.0" ProcessorArchitecture="neutral" />
   <Properties>
-    <DisplayName>Sparse Cpp Sample</DisplayName>
-    <PublisherDisplayName>Sparse Package</PublisherDisplayName>
+    <DisplayName>Package with External Location C++ Sample</DisplayName>
+    <PublisherDisplayName>Package with External Location C++ Sample</PublisherDisplayName>
     <Logo>Assets\storelogo.png</Logo>
     <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
   </Properties>
@@ -22,8 +22,8 @@
     <rescap:Capability Name="unvirtualizedResources"/>
   </Capabilities>
   <Applications>
-    <Application Id="SparseCppSample" Executable="SparseCppApp.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App"> 
-      <uap:VisualElements AppListEntry="none" DisplayName="Sparse Cpp Sample" Description="Sparse Cpp Sample App" BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" />
+    <Application Id="PackageWithExternalLocationCppSample" Executable="PackageWithExternalLocationCppApp.exe" uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App"> 
+      <uap:VisualElements AppListEntry="none" DisplayName="Package with External Location C++ Sample" Description="Package with External Location C++ Sample" BackgroundColor="transparent" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" />
     </Application>
   </Applications>
 </Package>

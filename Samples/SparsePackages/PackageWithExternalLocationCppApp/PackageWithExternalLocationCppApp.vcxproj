@@ -9,9 +9,10 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{1a597d15-7ef3-47f2-b89d-d180cbaa0f32}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SparseCppApp</RootNamespace>
+    <RootNamespace>PackageWithExternalLocationCppApp</RootNamespace>
     <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
+    <ProjectName>PackageWithExternalLocationCppApp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -129,8 +130,8 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ResourceCompile Include="SparseCppApp.rc" />
-    <Manifest Include="SparseCppApp.exe.manifest" />
+    <ResourceCompile Include="PackageWithExternalLocationCppApp.rc" />
+    <Manifest Include="PackageWithExternalLocationCppApp.exe.manifest" />
     <None Include="packages.config" />
     <None Include="PropertySheet.props" />
     <Text Include="readme.txt">
