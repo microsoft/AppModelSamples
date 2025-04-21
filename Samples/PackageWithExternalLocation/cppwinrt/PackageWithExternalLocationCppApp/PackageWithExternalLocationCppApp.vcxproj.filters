@@ -35,9 +35,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="PackageWithExternalLocationCppApp.exe.manifest" />
   </ItemGroup>
   <ItemGroup>
