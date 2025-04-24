@@ -176,30 +176,6 @@ HRESULT RegisterPackageWithExternalLocation(const std::wstring& externalLocation
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) 
 {
-
-    //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
-    //packagePath to match the path to your signed Sparse Package (.msix). 
-    //Note that these values cannot be relative paths and must be complete paths
-    std::wstring externalLocation = L"";
-    std::wstring packagePath = L"";
-
-    //Attempt registration
-    if (!externalLocation.empty() && !packagePath.empty())
-    {
-        auto result = RegisterPackageWithExternalLocation(externalLocation, packagePath);
-        if (result != HRESULT_FROM_WIN32(ERROR_PACKAGES_IN_USE) && FAILED(result))
-        {
-            if (result == HRESULT_FROM_WIN32(CERT_E_UNTRUSTEDROOT))
-            {
-                MessageBox(nullptr, L"Please install your certificate to Trusted Root Certification Authorities for Local Machine. Running without identity", L"result", MB_ICONINFORMATION);
-            }
-            else
-            {
-                MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"result", MB_ICONINFORMATION);
-            }
-        }
-    }
-
     MFStartup(MF_VERSION);
 
     // Register window class
