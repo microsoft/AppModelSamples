@@ -12,25 +12,30 @@ void InstallPackage(const std::wstring& packagePath, const std::wstring& externa
 {
     try 
     {
-        if (!externalLocation.empty() && !packagePath.empty())
+        if (externalLocation.empty() || packagePath.empty())
         {
-            winrt::Windows::Management::Deployment::PackageManager packageManager;
-            winrt::Windows::Management::Deployment::AddPackageOptions addOptions;
-            addOptions.ExternalLocationUri(winrt::Windows::Foundation::Uri(winrt::hstring(externalLocation)));
+            MessageBox(nullptr, L"Failed to register app with identity. Please provide the correct absolute path to your package and external location", L"", MB_ICONINFORMATION);
+            return;
+        }
+        
+        winrt::Windows::Management::Deployment::PackageManager packageManager;
+        winrt::Windows::Management::Deployment::AddPackageOptions addOptions;
+        addOptions.ExternalLocationUri(winrt::Windows::Foundation::Uri(winrt::hstring(externalLocation)));
 
-            auto deploymentResult = packageManager.AddPackageByUriAsync(winrt::Windows::Foundation::Uri(winrt::hstring(packagePath)), addOptions).get();
-            auto extendedErrorCode = deploymentResult.ExtendedErrorCode();
+        auto deploymentResult = packageManager.AddPackageByUriAsync(winrt::Windows::Foundation::Uri(winrt::hstring(packagePath)), addOptions).get();
+        auto extendedErrorCode = deploymentResult.ExtendedErrorCode();
 
-            if (extendedErrorCode != HRESULT_FROM_WIN32(ERROR_PACKAGES_IN_USE) && FAILED(extendedErrorCode))
+        if (extendedErrorCode != HRESULT_FROM_WIN32(ERROR_PACKAGES_IN_USE) && FAILED(extendedErrorCode))
+        {
+            wchar_t buff[10];
+            _itow_s(extendedErrorCode, buff, 16);
+            if (extendedErrorCode == HRESULT_FROM_WIN32(CERT_E_UNTRUSTEDROOT))
             {
-                if (extendedErrorCode == HRESULT_FROM_WIN32(CERT_E_UNTRUSTEDROOT))
-                {
-                    MessageBox(nullptr, L"Please install your certificate to Trusted Root Certification Authorities for Local Machine. Running without identity", L"result", MB_ICONINFORMATION);
-                }
-                else
-                {
-                    MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"result", MB_ICONINFORMATION);
-                }
+                MessageBox(nullptr, L"Please install your certificate to Trusted Root Certification Authorities for Local Machine. Running without identity", L"buff", MB_ICONINFORMATION);
+            }
+            else
+            {
+                MessageBox(nullptr, L"Failed to register app with identity. Running without identity", L"buff", MB_ICONINFORMATION);
             }
         }
     }  
