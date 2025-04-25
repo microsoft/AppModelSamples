@@ -31,7 +31,7 @@ void InstallPackage(const std::wstring& packagePath, const std::wstring& externa
             _itow_s(extendedErrorCode, buff, 16);
             if (extendedErrorCode == HRESULT_FROM_WIN32(CERT_E_UNTRUSTEDROOT))
             {
-                MessageBox(nullptr, L"Please install your certificate to Trusted Root Certification Authorities for Local Machine. Running without identity", buff, MB_ICONINFORMATION);
+                MessageBox(nullptr, L"Please install your certificate to Trusted People for Local Machine. Running without identity", buff, MB_ICONINFORMATION);
             }
             else
             {
