@@ -63,7 +63,7 @@ void UninstallPackage(const std::wstring& packageFullName)
 int main() 
 {
     //TODO - update the value of externalLocation to match the output location of your VS Build binaries even if you want to run without identity.
-    //To run with identity, update the value of packagePath to match the path to your signed Identity Package (.msix). 
+    //To run with identity, update the value of packagePath to match the path to your signed identity package (.msix). 
     //Note that these values cannot be relative paths and must be complete paths
     std::wstring packagePath = L"";
     std::wstring externalLocation = L"";
