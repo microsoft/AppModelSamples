@@ -146,8 +146,8 @@ namespace PhotoStoreDemo
             bool registration = false;
             try
             {
-                Uri externalUri = new Uri(externalLocation);
-                Uri packageUri = new Uri(packagePath);
+                var externalUri = new Uri(externalLocation);
+                var packageUri = new Uri(packagePath);
 
                 Console.WriteLine("exe Location {0}", externalLocation);
                 Console.WriteLine("msix Address {0}", packagePath);
@@ -155,7 +155,7 @@ namespace PhotoStoreDemo
                 Console.WriteLine("  exe Uri {0}", externalUri);
                 Console.WriteLine("  msix Uri {0}", packageUri);
 
-                PackageManager packageManager = new PackageManager();
+                var packageManager = new PackageManager();
 
                 //Declare use of an external location
                 var options = new AddPackageOptions();
@@ -163,7 +163,7 @@ namespace PhotoStoreDemo
 
                 Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
 
-                ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
+                var opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
 
                 deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
 
@@ -207,9 +207,9 @@ namespace PhotoStoreDemo
 
         private static void RemovePackageWithExternalLocation() //example of how to uninstall an identity package
         {
-            PackageManager packageManager = new PackageManager();
+            var packageManager = new PackageManager();
             Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
-            ManualResetEvent opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
+            var opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
 
             deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
 
