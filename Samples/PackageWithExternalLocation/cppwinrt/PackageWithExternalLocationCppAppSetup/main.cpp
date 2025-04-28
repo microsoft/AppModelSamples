@@ -41,7 +41,7 @@ void InstallPackage(const std::wstring& packagePath, const std::wstring& externa
     }  
     catch (const std::exception& ex) 
     {
-        MessageBox(nullptr, L"Error during installation: ", L"ex.what()", MB_ICONERROR);
+        MessageBoxA(nullptr, "Error during installation: ", ex.what(), MB_ICONERROR);
     }  
 }  
 
