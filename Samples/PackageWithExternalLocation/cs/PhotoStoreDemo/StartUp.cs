@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -21,26 +21,7 @@ namespace PhotoStoreDemo
             //if app isn't running with identity, register its identity package
             if (!ExecutionMode.IsRunningWithIdentity())
             {
-                //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
-                //packagePath to match the path to your signed identity package (.msix). 
-                //Note that these values cannot be relative paths and must be complete paths
-                string externalLocation = @"";
-                string packagePath = @"";
-
-                //Attempt registration
-                if (RegisterPackageWithExternalLocation(externalLocation, packagePath))
-                {
-                    //Registration succeded, restart the app to run with identity
-                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location, arguments: cmdArgs?.ToString());
-
-                }
-                else //Registration failed, run without identity
-                {
-                    Debug.WriteLine("Package Registation failed, running WITHOUT Identity");
-                    SingleInstanceManager wrapper = new SingleInstanceManager();
-                    wrapper.Run(cmdArgs);
-                }
-
+                RegisterIdentityAndRelaunchAsync(cmdArgs).GetAwaiter().GetResult();
             }
             else //App is registered and running with identity, handle launch and activation
             {
@@ -74,6 +55,28 @@ namespace PhotoStoreDemo
                 }
             }
 
+        }
+
+        static async Task RegisterIdentityAndRelaunchAsync(string[] cmdArgs)
+        {
+            //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
+            //packagePath to match the path to your signed identity package (.msix). 
+            //Note that these values cannot be relative paths and must be complete paths
+            string externalLocation = @"";
+            string packagePath = @"";
+
+            //Attempt registration
+            if (await RegisterPackageWithExternalLocationAsync(externalLocation, packagePath))
+            {
+                //Registration succeeded, restart the app to run with identity
+                Process.Start(Application.ResourceAssembly.Location, arguments: cmdArgs?.ToString());
+            }
+            else //Registration failed, run without identity
+            {
+                Debug.WriteLine("Package Registation failed, running WITHOUT Identity");
+                SingleInstanceManager wrapper = new SingleInstanceManager();
+                wrapper.Run(cmdArgs);
+            }
         }
 
         static void HandleLaunch(LaunchActivatedEventArgs args)
@@ -141,7 +144,7 @@ namespace PhotoStoreDemo
             singleInstanceManager.Run(Environment.GetCommandLineArgs());
         }
 
-        private static bool RegisterPackageWithExternalLocation(string externalLocation, string packagePath)
+        private static async Task<bool> RegisterPackageWithExternalLocationAsync(string externalLocation, string packagePath)
         {
             bool registration = false;
             try
@@ -161,17 +164,12 @@ namespace PhotoStoreDemo
                 var options = new AddPackageOptions();
                 options.ExternalLocationUri = externalUri;
 
-                Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
-
-                var opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
-
-                deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
-
                 Console.WriteLine("Installing package {0}", packagePath);
-
                 Debug.WriteLine("Waiting for package registration to complete...");
 
-                opCompletedEvent.WaitOne();
+                var deploymentOperation = packageManager.AddPackageByUriAsync(packageUri, options);
+
+                await deploymentOperation;
 
                 if (deploymentOperation.Status == Windows.Foundation.AsyncStatus.Error)
                 {
@@ -205,17 +203,12 @@ namespace PhotoStoreDemo
             return registration;
         }
 
-        private static void RemovePackageWithExternalLocation() //example of how to uninstall an identity package
+        private static async void RemovePackageWithExternalLocationAsync() //example of how to uninstall an identity package
         {
             var packageManager = new PackageManager();
-            Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
-            var opCompletedEvent = new ManualResetEvent(false); // this event will be signaled when the deployment operation has completed.
-
-            deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
 
             Debug.WriteLine("Uninstalling package..");
-            opCompletedEvent.WaitOne();
+            await packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
         }
-
     }
 }
