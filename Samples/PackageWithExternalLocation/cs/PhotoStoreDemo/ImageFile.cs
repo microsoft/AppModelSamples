@@ -46,20 +46,6 @@ namespace PhotoStoreDemo
             {
                 File.Copy(fi.FullName, cachedFile.FullName);
             }
-
-
-
-        }
-
-        public void AddToCache(Stream bitMapStream)
-        {
-            /* var fi = bitMapStream.
-             var cachedFile = new FileInfo(System.IO.Path.Combine(PhotosFolder.Current, fi.Name));
-             if (!cachedFile.Exists)
-             {
-                 File.Cre
-             }*/
-
         }
     }
 }
