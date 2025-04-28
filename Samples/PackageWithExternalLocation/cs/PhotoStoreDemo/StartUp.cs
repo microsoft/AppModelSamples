@@ -54,7 +54,6 @@ namespace PhotoStoreDemo
                     singleInstanceManager.Run(cmdArgs);
                 }
             }
-
         }
 
         static async Task RegisterIdentityAndRelaunchAsync(string[] cmdArgs)
@@ -81,7 +80,6 @@ namespace PhotoStoreDemo
 
         static void HandleLaunch(LaunchActivatedEventArgs args)
         {
-
             Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Debug.AutoFlush = true;
             Debug.Indent();
@@ -137,7 +135,6 @@ namespace PhotoStoreDemo
                 {
                     Console.WriteLine(ex.Message);
                 }
-
             }
             shareOperation.ReportCompleted();
             SingleInstanceManager singleInstanceManager = new SingleInstanceManager();
