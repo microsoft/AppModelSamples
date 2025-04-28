@@ -12,9 +12,7 @@
 // // Copyright (c) Microsoft. All rights reserved.
 // // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 
 namespace PhotoStoreDemo
@@ -26,7 +24,7 @@ namespace PhotoStoreDemo
     {
         public App()
         {
-            
+
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -41,14 +39,14 @@ namespace PhotoStoreDemo
             window.Show();
 
         }
-        
+
         public void Activate()
         {
             this.MainWindow.Activate();
         }
 
         internal void ProcessCommandLine(string[] args)
-        {             
+        {
             if (args.Length > 0)
             {
                 var path = args[0];

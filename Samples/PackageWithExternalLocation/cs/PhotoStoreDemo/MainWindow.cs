@@ -13,9 +13,8 @@
 // // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Linq;
-using System.IO;
 using System.Collections;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -25,9 +24,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
-using System.Reflection;
+using Windows.UI.Notifications;
 
 namespace PhotoStoreDemo
 {
@@ -48,7 +46,7 @@ namespace PhotoStoreDemo
             buttonAddPhoto.ToolTip = PhotosFolder.Current;
         }
 
-       
+
 
         private void WindowLoaded(object sender, EventArgs e)
         {
@@ -63,9 +61,9 @@ namespace PhotoStoreDemo
                 this.Title = "Desktop App";
                 this.TitleSpan.Foreground = Brushes.Navy;
             }
-            
+
             var layer = AdornerLayer.GetAdornerLayer(CurrentPhoto);
-            _cropSelector = new RubberbandAdorner(CurrentPhoto) {Window = this};
+            _cropSelector = new RubberbandAdorner(CurrentPhoto) { Window = this };
             layer.Add(_cropSelector);
 #if VISUALCHILD
             CropSelector.Rubberband.Visibility = Visibility.Hidden;
@@ -74,9 +72,9 @@ namespace PhotoStoreDemo
             CropSelector.ShowRect = false;
 #endif
 
-            Photos = (PhotoList) (this.Resources["Photos"] as ObjectDataProvider)?.Data;
-            Photos.Init(PhotosFolder.Current); 
-            ShoppingCart = (PrintList) (this.Resources["ShoppingCart"] as ObjectDataProvider)?.Data;
+            Photos = (PhotoList)(this.Resources["Photos"] as ObjectDataProvider)?.Data;
+            Photos.Init(PhotosFolder.Current);
+            ShoppingCart = (PrintList)(this.Resources["ShoppingCart"] as ObjectDataProvider)?.Data;
 
             // listen for files being created via Share UX
             FileSystemWatcher watcher = new FileSystemWatcher(PhotosFolder.Current);
@@ -167,7 +165,7 @@ namespace PhotoStoreDemo
         {
             if (ShoppingCart.Count > 0)
             {
-                var scaleDuration = new TimeSpan(0, 0, 0, 0, ShoppingCart.Count*200);
+                var scaleDuration = new TimeSpan(0, 0, 0, 0, ShoppingCart.Count * 200);
                 var progressAnimation = new DoubleAnimation(0, 100, scaleDuration, FillBehavior.Stop);
                 UploadProgressBar.BeginAnimation(RangeBase.ValueProperty, progressAnimation);
                 ShoppingCart.Clear();
@@ -181,7 +179,7 @@ namespace PhotoStoreDemo
         {
             if (CurrentPhoto.Source != null)
             {
-                var img = (BitmapSource) (CurrentPhoto.Source);
+                var img = (BitmapSource)(CurrentPhoto.Source);
                 _undoStack.Push(img);
                 var cache = new CachedBitmap(img, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
                 CurrentPhoto.Source = new TransformedBitmap(cache, new RotateTransform(90.0));
@@ -206,7 +204,7 @@ namespace PhotoStoreDemo
         {
             if (CurrentPhoto.Source != null)
             {
-                var img = (BitmapSource) (CurrentPhoto.Source);
+                var img = (BitmapSource)(CurrentPhoto.Source);
                 _undoStack.Push(img);
                 CurrentPhoto.Source = new FormatConvertedBitmap(img, PixelFormats.Gray8, BitmapPalettes.Gray256, 1.0);
                 if (false == UndoButton.IsEnabled)
@@ -238,14 +236,14 @@ namespace PhotoStoreDemo
         {
             if (CurrentPhoto.Source != null)
             {
-                var img = (BitmapSource) (CurrentPhoto.Source);
+                var img = (BitmapSource)(CurrentPhoto.Source);
                 _undoStack.Push(img);
                 var rect = new Int32Rect
                 {
-                    X = (int) (_cropSelector.SelectRect.X*img.PixelWidth/CurrentPhoto.ActualWidth),
-                    Y = (int) (_cropSelector.SelectRect.Y*img.PixelHeight/CurrentPhoto.ActualHeight),
-                    Width = (int) (_cropSelector.SelectRect.Width*img.PixelWidth/CurrentPhoto.ActualWidth),
-                    Height = (int) (_cropSelector.SelectRect.Height*img.PixelHeight/CurrentPhoto.ActualHeight)
+                    X = (int)(_cropSelector.SelectRect.X * img.PixelWidth / CurrentPhoto.ActualWidth),
+                    Y = (int)(_cropSelector.SelectRect.Y * img.PixelHeight / CurrentPhoto.ActualHeight),
+                    Width = (int)(_cropSelector.SelectRect.Width * img.PixelWidth / CurrentPhoto.ActualWidth),
+                    Height = (int)(_cropSelector.SelectRect.Height * img.PixelHeight / CurrentPhoto.ActualHeight)
                 };
                 CurrentPhoto.Source = new CroppedBitmap(img, rect);
 #if VISUALCHILD
@@ -265,7 +263,7 @@ namespace PhotoStoreDemo
         private void Undo(object sender, RoutedEventArgs e)
         {
             if (_undoStack.Count > 0)
-                CurrentPhoto.Source = (BitmapSource) _undoStack.Pop();
+                CurrentPhoto.Source = (BitmapSource)_undoStack.Pop();
             if (0 == _undoStack.Count)
                 UndoButton.IsEnabled = false;
 #if VISUALCHILD
@@ -290,7 +288,7 @@ namespace PhotoStoreDemo
             var result = ofd.ShowDialog();
             if (result == false) return;
             ImageFile item = new ImageFile(ofd.FileName);
-            item.AddToCache();           
+            item.AddToCache();
         }
 
         private void Add_Via_Toast_Click(object sender, RoutedEventArgs e)
@@ -321,6 +319,6 @@ namespace PhotoStoreDemo
             toastNotifier.Show(notification);
         }
 
-        
+
     }
 }

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Diagnostics;
-using Windows.Management.Deployment;
+using System.IO;
+using System.Threading;
+using System.Windows;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Foundation.Collections;
+using Windows.Management.Deployment;
 using Windows.Storage;
-using Windows.Storage.Streams;
-using System.Data;
-using System.IO;
-using System.Windows;
 
 namespace PhotoStoreDemo
 {

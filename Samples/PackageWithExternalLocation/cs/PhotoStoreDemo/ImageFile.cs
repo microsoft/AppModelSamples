@@ -14,7 +14,6 @@
 
 using System;
 using System.IO;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace PhotoStoreDemo
@@ -40,26 +39,26 @@ namespace PhotoStoreDemo
         public override string ToString() => Path;
 
         public void AddToCache()
-        { 
+        {
             var fi = new FileInfo(Path);
             var cachedFile = new FileInfo(System.IO.Path.Combine(PhotosFolder.Current, fi.Name));
             if (!cachedFile.Exists)
             {
                 File.Copy(fi.FullName, cachedFile.FullName);
             }
-            
-            
+
+
 
         }
 
         public void AddToCache(Stream bitMapStream)
         {
-           /* var fi = bitMapStream.
-            var cachedFile = new FileInfo(System.IO.Path.Combine(PhotosFolder.Current, fi.Name));
-            if (!cachedFile.Exists)
-            {
-                File.Cre
-            }*/
+            /* var fi = bitMapStream.
+             var cachedFile = new FileInfo(System.IO.Path.Combine(PhotosFolder.Current, fi.Name));
+             if (!cachedFile.Exists)
+             {
+                 File.Cre
+             }*/
 
         }
     }

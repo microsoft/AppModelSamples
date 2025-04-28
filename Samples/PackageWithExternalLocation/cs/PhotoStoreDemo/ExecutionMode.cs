@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PhotoStoreDemo
 {
@@ -42,7 +39,7 @@ namespace PhotoStoreDemo
         {
             try
             {
-               // return Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+                // return Windows.Storage.ApplicationData.Current.LocalFolder.Path;
             }
             catch (Exception ioe)
             {

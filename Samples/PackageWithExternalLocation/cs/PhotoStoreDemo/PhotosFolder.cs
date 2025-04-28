@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PhotoStoreDemo
 {
@@ -19,7 +14,7 @@ namespace PhotoStoreDemo
                 {
                     path = ExecutionMode.GetSafeAppxLocalFolder();
                 }
-                if (path==null)
+                if (path == null)
                 {
                     path = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
                     path = Path.Combine(path, "Photos");
@@ -31,6 +26,6 @@ namespace PhotoStoreDemo
                 }
                 return path;
             }
-        }   
+        }
     }
 }
