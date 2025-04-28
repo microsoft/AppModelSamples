@@ -20,17 +20,17 @@ namespace PhotoStoreDemo
         [STAThread]
         public static void Main(string[] cmdArgs)
         {
-            //if app isn't running with identity, register its sparse package
+            //if app isn't running with identity, register its identity package
             if (!ExecutionMode.IsRunningWithIdentity())
             {
                 //TODO - update the value of externalLocation to match the output location of your VS Build binaries and the value of 
-                //sparsePkgPath to match the path to your signed Sparse Package (.msix). 
+                //packagePath to match the path to your signed identity package (.msix). 
                 //Note that these values cannot be relative paths and must be complete paths
                 string externalLocation = @"";
-                string sparsePkgPath = @"";
+                string packagePath = @"";
 
                 //Attempt registration
-                if (registerSparsePackage(externalLocation, sparsePkgPath))
+                if (RegisterPackageWithExternalLocation(externalLocation, packagePath))
                 {
                     //Registration succeded, restart the app to run with identity
                     System.Diagnostics.Process.Start(Application.ResourceAssembly.Location, arguments: cmdArgs?.ToString());
@@ -46,7 +46,7 @@ namespace PhotoStoreDemo
             }
             else //App is registered and running with identity, handle launch and activation
             {
-                //Handle Sparse Package based activation e.g Share target activation or clicking on a Tile
+                //Handle identity package based activation e.g Share target activation or clicking on a Tile
                 // Launching the .exe directly will have activationArgs == null
                 var activationArgs = AppInstance.GetActivatedEventArgs();
                 if (activationArgs != null)
@@ -84,7 +84,7 @@ namespace PhotoStoreDemo
             Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Debug.AutoFlush = true;
             Debug.Indent();
-            Debug.WriteLine("WPF App using a Sparse Package");
+            Debug.WriteLine("WPF App using an identity package");
 
 
             SingleInstanceManager singleInstanceManager = new SingleInstanceManager();
@@ -143,16 +143,16 @@ namespace PhotoStoreDemo
             singleInstanceManager.Run(Environment.GetCommandLineArgs());
         }
 
-        private static bool registerSparsePackage(string externalLocation, string sparsePkgPath)
+        private static bool RegisterPackageWithExternalLocation(string externalLocation, string packagePath)
         {
             bool registration = false;
             try
             {
                 Uri externalUri = new Uri(externalLocation);
-                Uri packageUri = new Uri(sparsePkgPath);
+                Uri packageUri = new Uri(packagePath);
 
                 Console.WriteLine("exe Location {0}", externalLocation);
-                Console.WriteLine("msix Address {0}", sparsePkgPath);
+                Console.WriteLine("msix Address {0}", packagePath);
 
                 Console.WriteLine("  exe Uri {0}", externalUri);
                 Console.WriteLine("  msix Uri {0}", packageUri);
@@ -169,7 +169,7 @@ namespace PhotoStoreDemo
 
                 deploymentOperation.Completed = (depProgress, status) => { opCompletedEvent.Set(); };
 
-                Console.WriteLine("Installing package {0}", sparsePkgPath);
+                Console.WriteLine("Installing package {0}", packagePath);
 
                 Debug.WriteLine("Waiting for package registration to complete...");
 
@@ -207,7 +207,7 @@ namespace PhotoStoreDemo
             return registration;
         }
 
-        private static void removeSparsePackage() //example of how to uninstall a Sparse Package
+        private static void RemovePackageWithExternalLocation() //example of how to uninstall an identity package
         {
             PackageManager packageManager = new PackageManager();
             Windows.Foundation.IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.RemovePackageAsync("PhotoStoreDemo_0.0.0.1_x86__rg009sv5qtcca");
