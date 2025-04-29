@@ -49,12 +49,14 @@ void LaunchApplication(const std::wstring& exePath)
 {  
     HINSTANCE result = ShellExecute(nullptr, L"open", exePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);  
     if ((int)result <= 32) 
-    {  
-        MessageBox(nullptr, L"Failed to launch application", L"result", MB_ICONERROR);
+    {
+        wchar_t buff[10];
+        _itow_s((int)result, buff, 16);
+        MessageBox(nullptr, L"Failed to launch application", buff, MB_ICONERROR);
     }  
 }
 
-void UninstallPackage(const std::wstring& packageFullName) 
+void UninstallPackage(const std::wstring& packageFullName)
 {  
     winrt::Windows::Management::Deployment::PackageManager packageManager;  
     auto deploymentOperation = packageManager.RemovePackageAsync(packageFullName).get();  
