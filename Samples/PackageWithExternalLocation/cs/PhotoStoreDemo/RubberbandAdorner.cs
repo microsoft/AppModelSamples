@@ -60,7 +60,7 @@ namespace PhotoStoreDemo
         protected override Size ArrangeOverride(Size size)
         {
             var finalSize = base.ArrangeOverride(size);
-            ((UIElement) GetVisualChild(0))?.Arrange(new Rect(new Point(), finalSize));
+            ((UIElement)GetVisualChild(0))?.Arrange(new Rect(new Point(), finalSize));
             return finalSize;
         }
 
